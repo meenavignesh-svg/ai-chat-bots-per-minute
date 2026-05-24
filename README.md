@@ -1,37 +1,69 @@
-# AI Chat Bots Per Minute
+# AI Chatbots Per Minute — Experimental Agent Research Archive
 
-A growing collection of small themed chatbot projects. Each chatbot has its own folder, browser demo, and setup notes.
+An experimental archive of small AI chatbot and agent prototypes across healthcare, biotech, education, automation, productivity, medical coding, local LLMs, RAG, and voice-agent workflows.
+
+The goal is to study long-term automated generation, consistent GitHub pushes, browser demos, deployment readiness, and quality tracking across many small agent experiments.
+
+## Research Areas
+
+| Area | Folder | Focus |
+| --- | --- | --- |
+| Healthcare | `healthcare/` | patient support concepts, wellness flows, safety-aware assistants |
+| Biotech | `biotech/` | study assistants, lab-note helpers, high-level research planning |
+| Education | `education/` | tutors, quiz builders, revision planners |
+| Automation | `automation/` | workflow assistants and task agents |
+| Productivity | `productivity/` | planning, note-taking, prioritization tools |
+| Medical Coding | `medical-coding/` | coding education, claim-review concepts, terminology helpers |
+| Local LLM | `local-llm/` | Ollama and local-model experiments |
+| RAG | `rag/` | retrieval-augmented chatbot experiments |
+| Voice Agents | `voice-agents/` | speech-first assistant concepts |
 
 ## Chatbot Catalog
 
-| S.No | Chatbot | Made On (UTC) | Folder | Notes |
-| ---: | --- | --- | --- | --- |
-| 1 | Moon Cafe | 2026-05-24 14:38 UTC | `ai-chatbots/moon-cafe-chatbot-2026-05-24-1438z` | Browser demo |
-| 2 | Pirate Map | 2026-05-24 14:39 UTC | `ai-chatbots/pirate-map-chatbot-2026-05-24-1439z` | Browser demo |
-| 3 | Lab Mentor | 2026-05-24 14:40 UTC | `ai-chatbots/lab-mentor-chatbot-2026-05-24-1440z` | Browser demo with AI backend option |
-| 4 | Ocean Medic | 2026-05-24 15:03 UTC | `ai-chatbots/ocean-medic-chatbot-2026-05-24-1503z` | Browser demo with AI backend option |
-| 5 | Museum Guide | 2026-05-24 15:13 UTC | `ai-chatbots/museum-guide-chatbot-2026-05-24-1513z` | Browser demo with AI backend option |
-| 6 | Travel Planner | 2026-05-24 15:18 UTC | `ai-chatbots/travel-planner-chatbot-2026-05-24-1518z` | Browser demo with AI backend option |
-| 7 | Forest Ranger | 2026-05-24 15:20 UTC | `ai-chatbots/forest-ranger-chatbot-2026-05-24-1520z` | Browser demo with AI backend option |
-| 8 | City Chef | 2026-05-24 15:22 UTC | `ai-chatbots/city-chef-chatbot-2026-05-24-1522z` | Browser demo with AI backend option |
-| 9 | Study Buddy | 2026-05-24 15:23 UTC | `ai-chatbots/study-buddy-chatbot-2026-05-24-1523z` | Browser demo with AI backend option |
-| 10 | Fitness Coach | 2026-05-24 15:26 UTC | `ai-chatbots/fitness-coach-chatbot-2026-05-24-1526z` | Browser demo with AI backend option |
-| 11 | Budget Mentor | 2026-05-24 15:32 UTC | `ai-chatbots/budget-mentor-chatbot-2026-05-24-1532z` | Browser demo with optional Vercel AI mode |
-| 12 | Beat Producer | 2026-05-24 15:41 UTC | `ai-chatbots/beat-producer-chatbot-2026-05-24-1541z` | Browser demo with optional Vercel AI mode |
-| 13 | Robot Gardener | 2026-05-24 16:10 UTC | `ai-chatbots/robot-gardener-chatbot-2026-05-24-1610z` | Browser demo with optional Vercel AI mode |
-| 14 | Startup Coach | 2026-05-24 16:21 UTC | `ai-chatbots/startup-coach-chatbot-2026-05-24-1621z` | Browser demo with optional Vercel AI mode |
+| S.No | Chatbot | Made On (UTC) | Category | Folder | Status | Model | Quality | Deployment |
+| ---: | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Moon Cafe | 2026-05-24 14:38 UTC | Productivity | `ai-chatbots/moon-cafe-chatbot-2026-05-24-1438z` | Successful demo | Browser demo | Untested | Not deployed |
+| 2 | Pirate Map | 2026-05-24 14:39 UTC | Education | `ai-chatbots/pirate-map-chatbot-2026-05-24-1439z` | Successful demo | Browser demo | Untested | Not deployed |
+| 3 | Lab Mentor | 2026-05-24 14:40 UTC | Biotech | `ai-chatbots/lab-mentor-chatbot-2026-05-24-1440z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 4 | Ocean Medic | 2026-05-24 15:03 UTC | Healthcare | `ai-chatbots/ocean-medic-chatbot-2026-05-24-1503z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 5 | Museum Guide | 2026-05-24 15:13 UTC | Education | `ai-chatbots/museum-guide-chatbot-2026-05-24-1513z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 6 | Travel Planner | 2026-05-24 15:18 UTC | Productivity | `ai-chatbots/travel-planner-chatbot-2026-05-24-1518z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 7 | Forest Ranger | 2026-05-24 15:20 UTC | Healthcare | `ai-chatbots/forest-ranger-chatbot-2026-05-24-1520z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 8 | City Chef | 2026-05-24 15:22 UTC | Productivity | `ai-chatbots/city-chef-chatbot-2026-05-24-1522z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 9 | Study Buddy | 2026-05-24 15:23 UTC | Education | `ai-chatbots/study-buddy-chatbot-2026-05-24-1523z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 10 | Fitness Coach | 2026-05-24 15:26 UTC | Healthcare | `ai-chatbots/fitness-coach-chatbot-2026-05-24-1526z` | Successful demo | OpenAI-ready | Untested | Not deployed |
+| 11 | Budget Mentor | 2026-05-24 15:32 UTC | Productivity | `ai-chatbots/budget-mentor-chatbot-2026-05-24-1532z` | Successful demo | Vercel/OpenAI-ready | Untested | Not deployed |
+| 12 | Beat Producer | 2026-05-24 15:41 UTC | Productivity | `ai-chatbots/beat-producer-chatbot-2026-05-24-1541z` | Successful demo | Vercel/OpenAI-ready | Untested | Not deployed |
+| 13 | Robot Gardener | 2026-05-24 16:10 UTC | Automation | `ai-chatbots/robot-gardener-chatbot-2026-05-24-1610z` | Successful demo | Vercel/OpenAI-ready | Untested | Not deployed |
+| 14 | Startup Coach | 2026-05-24 16:21 UTC | Productivity | `ai-chatbots/startup-coach-chatbot-2026-05-24-1621z` | Successful demo | Vercel/OpenAI-ready | Untested | Not deployed |
 
-## How To Try A Chatbot
+## Experiment Tracking
 
-Open the chatbot folder, then open `public/index.html` for newer projects. Some older projects use `index.html` directly in the project folder.
+- Successful projects: `tracking/successful-projects.md`
+- Failed experiments: `tracking/failed-experiments.md`
+- Token and compute usage: `tracking/token-usage.md`
+- Model usage: `tracking/model-usage.md`
+- Response quality: `tracking/response-quality.md`
+- Benchmarks: `tracking/benchmarks.md`
+- Deployment links: `tracking/deployment-links.md`
+- Screenshots: `screenshots/README.md`
 
-## Modes
+## Project Standard
 
-- Browser demo: works immediately in a browser with built-in replies.
-- AI backend option: includes backend files for real AI responses when configured.
-- Optional Vercel AI mode: can be deployed to Vercel and asks visitors for their own OpenAI API key.
+Each project should include:
 
-## Automation
+- README
+- tags
+- short explanation
+- screenshot placeholder or screenshot
+- deployment link placeholder or live link
+- browser demo
+- model used
+- response quality notes
+- benchmark notes
+- generated by automation pipeline
+
+## Automation Pipeline
 
 The repository includes a chatbot factory workflow in `.github/workflows/generate-chatbot.yml`. It is designed to create new chatbot projects on a schedule using Python templates and Ollama.
 
