@@ -1,5 +1,5 @@
 # AI Chat Bots Per Minute
 
-This repository is filled by a Codex automation that creates small themed browser chatbot projects.
+A growing collection of small themed chatbot projects.
 
-Each project lives in `ai-chatbots/` with its own README and runnable `index.html`, `style.css`, and `script.js` files.
+Each project lives in `ai-chatbots/` with its own browser demo, optional Vercel real AI mode, and setup notes.
