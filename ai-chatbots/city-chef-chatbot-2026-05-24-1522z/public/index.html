@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>City Chef Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="chat-panel" aria-label="City Chef Chatbot">
+      <header class="chat-header">
+        <div>
+          <p class="eyebrow">Kitchen counter</p>
+          <h1>City Chef</h1>
+        </div>
+        <span id="status" class="status">online</span>
+      </header>
+
+      <div id="messages" class="messages" aria-live="polite"></div>
+
+      <form id="chatForm" class="chat-form">
+        <input id="userInput" type="text" autocomplete="off" placeholder="Ask for recipes, swaps, or meal ideas..." aria-label="Message">
+        <button id="sendButton" type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
