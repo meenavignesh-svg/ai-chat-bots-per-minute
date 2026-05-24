@@ -1,0 +1,13 @@
+# Deployment Links
+
+| S.No | Project | Platform | URL | Status | Notes |
+| ---: | --- | --- | --- | --- | --- |
+| 1 | Moon Cafe | None | Pending | Not deployed | Browser demo only. |
+| 2 | Budget Mentor | Vercel-ready | Pending | Not deployed | Visitor API key mode available. |
+| 3 | Beat Producer | Vercel-ready | Pending | Not deployed | Visitor API key mode available. |
+| 4 | Robot Gardener | Vercel-ready | Pending | Not deployed | Visitor API key mode available. |
+| 5 | Startup Coach | Vercel-ready | Pending | Not deployed | Visitor API key mode available. |
+
+## Deployment Notes
+
+Use Vercel root-directory deployment for individual chatbot folders when a public URL is needed.
