@@ -4,7 +4,7 @@
 
 ## GitHub Actions
 
-The hourly workflow installs Ollama, pulls `llama3.2:1b`, and runs this generator. If Ollama is unavailable, the generator falls back to built-in templates.
+The scheduled workflow installs Ollama, pulls `llama3.2:1b`, and runs this generator. If Ollama is unavailable, the generator falls back to built-in templates.
 
 ## Run Locally
 
@@ -28,4 +28,4 @@ ollama pull llama3.2:1b
 OLLAMA_URL=http://localhost:11434 OLLAMA_MODEL=llama3.2:1b python tools/chatbot_factory/generate.py
 ```
 
-Without Ollama, the script uses built-in templates and does not consume LLM tokens.
+Without Ollama, the script uses built-in templates.
