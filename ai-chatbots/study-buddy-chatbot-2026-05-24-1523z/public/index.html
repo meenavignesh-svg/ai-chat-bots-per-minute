@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Study Buddy Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="chat-panel" aria-label="Study Buddy Chatbot">
+      <header class="chat-header">
+        <div>
+          <p class="eyebrow">Study desk</p>
+          <h1>Study Buddy</h1>
+        </div>
+        <span id="status" class="status">online</span>
+      </header>
+
+      <div id="messages" class="messages" aria-live="polite"></div>
+
+      <form id="chatForm" class="chat-form">
+        <input id="userInput" type="text" autocomplete="off" placeholder="Ask for explanations, quizzes, or study plans..." aria-label="Message">
+        <button id="sendButton" type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
