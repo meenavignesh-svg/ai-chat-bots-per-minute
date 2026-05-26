@@ -5,10 +5,11 @@ Generates one unique chatbot project at a time.
 ## Behavior
 
 - Reads existing catalog entries from `README.md`.
-- Picks an unused theme from `tools/chatbot_factory/generate.py`.
-- Creates a complete browser-demo chatbot in `ai-chatbots/`.
+- Uses OpenAI or Gemini for fresh premium concepts when secrets are available.
+- Falls back to the local idea engine if AI keys are not available.
+- Creates a complete visual browser-demo chatbot in `ai-chatbots/`.
 - Updates tracking files.
-- Stops when all themes are used, so duplicates are avoided.
+- Avoids repeated slugs.
 
 ## Manual Run
 
