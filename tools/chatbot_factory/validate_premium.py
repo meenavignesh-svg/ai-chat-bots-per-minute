@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+DOCS = ROOT / "docs"
 
 REQUIRED_FILES = [
     "README.md",
@@ -17,15 +18,17 @@ REQUIRED_FILES = [
     "public/style.css",
     "public/script.js",
     "public/cover.svg",
+    "screenshots/preview.svg",
+    "project.json",
 ]
 
 CONTENT_CHECKS = {
-    "README.md": ["premium", "Vercel", "OpenAI"],
+    "README.md": ["premium", "Vercel", "OpenAI", "Live Demo", "screenshot"],
     "package.json": ["openai", "start"],
     "api/chat.js": ["process.env.OPENAI_API_KEY", "responses.create", "visitorKey"],
-    "public/index.html": ["<section class=\"hero\"", "<img", "chat"],
+    "public/index.html": ["<section class=\"hero\"", "<img", "data-variant", "tool-panel"],
     "public/style.css": [".hero", "@media", "box-shadow"],
-    "public/script.js": ["sessionStorage", "demo", "fetch"],
+    "public/script.js": ["sessionStorage", "demoReply", "fetch", "quickActions"],
 }
 
 
@@ -63,6 +66,25 @@ def require_package_quality(project: Path) -> None:
         raise SystemExit("package.json must include a start script.")
 
 
+def require_unique_metadata(project: Path) -> dict:
+    metadata = json.loads((project / "project.json").read_text(encoding="utf-8"))
+    required = ["layout", "feature", "palette", "live_demo", "code_signature"]
+    missing = [key for key in required if not metadata.get(key)]
+    if missing:
+        raise SystemExit("project.json is missing unique metadata: " + ", ".join(missing))
+    if "github.io" not in str(metadata["live_demo"]):
+        raise SystemExit("project.json must include a GitHub Pages live demo URL.")
+    return metadata
+
+
+def require_static_demo(project_folder_name: str) -> None:
+    demo = DOCS / project_folder_name
+    required = ["index.html", "style.css", "script.js", "cover.svg"]
+    missing = [path for path in required if not (demo / path).is_file()]
+    if missing:
+        raise SystemExit("Static live demo copy is missing files: " + ", ".join(missing))
+
+
 def main() -> None:
     log_file = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "generated-chatbot.txt")
     relative_project = generated_path_from_log(log_file)
@@ -76,10 +98,12 @@ def main() -> None:
         raise SystemExit("Generated chatbot is missing required files: " + ", ".join(missing_files))
 
     require_package_quality(project)
+    metadata = require_unique_metadata(project)
+    require_static_demo(project.name)
     for relative_path, needles in CONTENT_CHECKS.items():
         require_contains(project, relative_path, needles)
 
-    print(f"Premium validation passed: {relative_project}")
+    print(f"Premium validation passed: {relative_project} ({metadata['layout']} / {metadata['palette']})")
 
 
 if __name__ == "__main__":
