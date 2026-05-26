@@ -32,7 +32,9 @@ jobs:
           python-version: '3.11'
 
       - name: Check generator syntax
-        run: python -m py_compile tools/chatbot_factory/generate.py
+        run: |
+          python -m py_compile tools/chatbot_factory/generate.py
+          python -m py_compile tools/chatbot_factory/normalize_readme.py
 
       - name: Generate chatbot
         env:
@@ -42,6 +44,7 @@ jobs:
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
         run: |
           python tools/chatbot_factory/generate.py | tee generated-chatbot.txt
+          python tools/chatbot_factory/normalize_readme.py
           echo "CHATBOT_PATH=$(sed -n 's/^Created //p' generated-chatbot.txt | tail -n 1)" >> "$GITHUB_ENV"
 
       - name: Commit and push
