@@ -1,4 +1,4 @@
-name: Generate chatbot project
+name: Generate premium AI chatbot product
 
 on:
   push:
@@ -6,20 +6,20 @@ on:
       - '.github/workflows/generate-chatbot.yml'
       - 'tools/chatbot_factory/**'
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '30 0,12 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: chatbot-generator
+  group: premium-chatbot-generator
   cancel-in-progress: false
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -34,20 +34,20 @@ jobs:
       - name: Check generator syntax
         run: |
           python -m py_compile tools/chatbot_factory/generate.py
-          python -m py_compile tools/chatbot_factory/normalize_readme.py
           python -m py_compile tools/chatbot_factory/validate_premium.py
+          python -m py_compile tools/chatbot_factory/normalize_readme.py
 
-      - name: Generate premium chatbot
+      - name: Generate premium product
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
         run: |
-          python tools/chatbot_factory/generate.py | tee generated-chatbot.txt
-          python tools/chatbot_factory/validate_premium.py generated-chatbot.txt
+          python tools/chatbot_factory/generate.py | tee generated-product.txt
+          python tools/chatbot_factory/validate_premium.py generated-product.txt
           python tools/chatbot_factory/normalize_readme.py
-          echo "CHATBOT_PATH=$(sed -n 's/^Created //p' generated-chatbot.txt | tail -n 1)" >> "$GITHUB_ENV"
+          echo "CHATBOT_PATH=$(sed -n 's/^Created //p' generated-product.txt | tail -n 1)" >> "$GITHUB_ENV"
 
       - name: Commit and push
         id: commit_generated
@@ -59,13 +59,13 @@ jobs:
             echo "changes_detected=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "Add premium chatbot project"
+          git commit -m "Add premium AI chatbot product"
           git pull --rebase origin main
           git push origin HEAD:main
           echo "changes_detected=true" >> "$GITHUB_OUTPUT"
           echo "commit_hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Email chatbot notification
+      - name: Email product notification
         if: steps.commit_generated.outputs.changes_detected == 'true'
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
@@ -77,34 +77,28 @@ jobs:
           COMMIT_HASH: ${{ steps.commit_generated.outputs.commit_hash }}
         run: |
           python - <<'PY'
-          import os
-          import smtplib
+          import os, smtplib
           from email.message import EmailMessage
-
           username = os.environ.get('MAIL_USERNAME', '').strip()
           password = os.environ.get('MAIL_PASSWORD', '').strip()
           if not username or not password:
               print('Mail secrets are missing; skipping email notification.')
               raise SystemExit(0)
-
           server = os.environ.get('MAIL_SERVER', '').strip() or 'smtp.gmail.com'
           port = int(os.environ.get('MAIL_PORT', '').strip() or '465')
           sender = os.environ.get('MAIL_FROM', '').strip() or username
-          chatbot_path = os.environ.get('CHATBOT_PATH', '').strip() or 'ai-chatbots/'
-          commit_hash = os.environ.get('COMMIT_HASH', '').strip()
-          commit_url = f'https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/commit/{commit_hash}' if commit_hash else 'https://github.com/meenavignesh-svg/ai-chat-bots-per-minute'
-
+          path = os.environ.get('CHATBOT_PATH', '').strip()
+          commit = os.environ.get('COMMIT_HASH', '').strip()
           msg = EmailMessage()
-          msg['Subject'] = 'New premium AI chatbot created'
+          msg['Subject'] = 'New premium AI chatbot product created'
           msg['From'] = sender
           msg['To'] = 'torrickytan@gmail.com'
           msg.set_content(
-              'A new premium chatbot project was created.\n\n'
-              f'Project path: {chatbot_path}\n'
+              'A new premium AI chatbot product was created.\n\n'
+              f'Project path: {path}\n'
               'Repository: https://github.com/meenavignesh-svg/ai-chat-bots-per-minute\n'
-              f'Commit: {commit_url}\n'
+              f'Commit: https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/commit/{commit}\n'
           )
-
           with smtplib.SMTP_SSL(server, port) as smtp:
               smtp.login(username, password)
               smtp.send_message(msg)

@@ -1,4 +1,4 @@
 # Failed Experiments
 
-| Date UTC | Project | Failure | Fix |
-| --- | --- | --- | --- |
+| Date UTC | Reason | Notes |
+| --- | --- | --- |
