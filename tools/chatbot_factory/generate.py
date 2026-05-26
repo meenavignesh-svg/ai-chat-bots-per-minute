@@ -17,6 +17,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "ai-chatbots"
+DOCS = ROOT / "docs"
+PAGES_BASE = "https://meenavignesh-svg.github.io/ai-chat-bots-per-minute"
 
 CATEGORIES = ["Healthcare", "Biotech", "Education", "Automation", "Productivity", "Medical Coding", "Local LLM", "RAG", "Voice Agents"]
 CATEGORY_QUERY = {
@@ -43,7 +45,27 @@ DOMAINS = [
 ]
 ROLES = [("Navigator", "nav"), ("Coach", "coach"), ("Analyst", "analyst"), ("Tutor", "tutor"), ("Planner", "planner"), ("Reviewer", "reviewer"), ("Builder", "builder"), ("Scribe", "scribe")]
 JOBS = [("Daily Brief", "brief"), ("Decision Helper", "decision"), ("Practice Lab", "practice"), ("Checklist Maker", "checklist"), ("Explainer", "explain"), ("Quality Check", "quality"), ("Idea Sprint", "sprint"), ("Troubleshooter", "fix")]
-PALETTES = [("#38bdf8", "#14b8a6"), ("#2dd4bf", "#f472b6"), ("#facc15", "#60a5fa"), ("#a78bfa", "#34d399"), ("#fb7185", "#fbbf24"), ("#93c5fd", "#22c55e"), ("#c084fc", "#67e8f9"), ("#f97316", "#84cc16"), ("#e879f9", "#38bdf8")]
+PALETTES = [("#38bdf8", "#14b8a6"), ("#2dd4bf", "#f472b6"), ("#facc15", "#60a5fa"), ("#a78bfa", "#34d399"), ("#fb7185", "#fbbf24"), ("#93c5fd", "#22c55e"), ("#c084fc", "#67e8f9"), ("#f97316", "#84cc16"), ("#e879f9", "#38bdf8"), ("#10b981", "#f59e0b"), ("#ef4444", "#22d3ee"), ("#8b5cf6", "#f97316"), ("#06b6d4", "#eab308"), ("#84cc16", "#ec4899"), ("#0ea5e9", "#f43f5e"), ("#14b8a6", "#a855f7")]
+LAYOUTS = [
+    {"id": "split-command", "label": "Split Command Center", "body": "splitBody", "extra": "briefPanel"},
+    {"id": "studio-board", "label": "Studio Board", "body": "studioBody", "extra": "promptRail"},
+    {"id": "insight-deck", "label": "Insight Deck", "body": "deckBody", "extra": "qualityMeter"},
+    {"id": "mission-console", "label": "Mission Console", "body": "consoleBody", "extra": "missionPanel"},
+    {"id": "research-desk", "label": "Research Desk", "body": "researchBody", "extra": "sourcePanel"},
+    {"id": "clinic-hub", "label": "Clinic Hub", "body": "clinicBody", "extra": "carePanel"},
+    {"id": "voice-studio", "label": "Voice Studio", "body": "voiceBody", "extra": "callPanel"},
+    {"id": "learning-lab", "label": "Learning Lab", "body": "learningBody", "extra": "quizPanel"},
+    {"id": "ops-wall", "label": "Operations Wall", "body": "opsBody", "extra": "automationPanel"},
+    {"id": "evidence-room", "label": "Evidence Room", "body": "evidenceBody", "extra": "citationPanel"},
+    {"id": "focus-suite", "label": "Focus Suite", "body": "focusBody", "extra": "priorityPanel"},
+    {"id": "model-bench", "label": "Model Bench", "body": "benchBody", "extra": "evalPanel"},
+]
+FEATURES = [
+    {"id": "brief-builder", "label": "Brief Builder", "chips": ["Summarize", "Risks", "Next steps"]},
+    {"id": "decision-lens", "label": "Decision Lens", "chips": ["Options", "Tradeoffs", "Recommendation"]},
+    {"id": "practice-coach", "label": "Practice Coach", "chips": ["Quiz me", "Hint", "Review"]},
+    {"id": "ops-check", "label": "Ops Check", "chips": ["Checklist", "Blockers", "Automate"]},
+]
 
 
 def write(path: Path, content: str) -> None:
@@ -71,6 +93,38 @@ def next_number(text: str) -> int:
 
 def append_row(path: str, row: str) -> None:
     write(ROOT / path, read(path).rstrip() + "\n" + row)
+
+
+def choice_for(slug: str, items: list[dict], salt: str) -> dict:
+    digest = hashlib.sha1(f"{slug}:{salt}".encode("utf-8")).hexdigest()
+    return items[int(digest[:2], 16) % len(items)]
+
+
+def used_variants() -> tuple[set[str], set[str], set[str]]:
+    layouts, palettes, signatures = set(), set(), set()
+    for meta in OUT.glob("*/project.json"):
+        try:
+            data = json.loads(meta.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if data.get("layout"):
+            layouts.add(str(data["layout"]))
+        if data.get("palette"):
+            palettes.add(str(data["palette"]))
+        if data.get("code_signature"):
+            signatures.add(str(data["code_signature"]))
+    return layouts, palettes, signatures
+
+
+def choose_unused_dict(slug: str, items: list[dict], used: set[str], key: str, salt: str) -> dict:
+    pool = [item for item in items if item[key] not in used] or items
+    return choice_for(slug, pool, salt)
+
+
+def choose_unused_palette(slug: str, used: set[str]) -> tuple[str, str]:
+    pool = [pair for pair in PALETTES if "-".join(pair) not in used] or PALETTES
+    digest = hashlib.sha1(f"{slug}:palette".encode("utf-8")).hexdigest()
+    return pool[int(digest[:2], 16) % len(pool)]
 
 
 def palette_for(slug: str) -> tuple[str, str]:
@@ -112,9 +166,8 @@ def ai_prompt(used: set[str]) -> str:
     return (
         "Invent one premium web chatbot concept for an AI experimentation archive. "
         "Return only compact JSON with keys: title, category, focus, demo_reply, image_keywords. "
-        "The chatbot must feel useful, specific, portfolio-worthy, and visually designable. "
+        "The chatbot must be useful, specific, portfolio-worthy, and different from a generic chat demo. "
         "Category must be one of: " + ", ".join(CATEGORIES) + ". "
-        "image_keywords should be 2-4 comma-separated visual search words. "
         "Avoid these used slugs: " + ", ".join(sorted(used)[-80:])
     )
 
@@ -188,74 +241,46 @@ def image_url(theme: dict[str, str]) -> str:
     return f"https://source.unsplash.com/1400x1000/?{query}"
 
 
-def cover_svg(title: str, category: str, accent: str, accent2: str) -> str:
+def cover_svg(title: str, category: str, accent: str, accent2: str, layout: dict, feature: dict) -> str:
     safe_title = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     safe_category = category.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     return f"""
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="{safe_title} cover">
       <defs>
         <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="{accent}"/><stop offset="1" stop-color="{accent2}"/></linearGradient>
-        <filter id="blur"><feGaussianBlur stdDeviation="35"/></filter>
       </defs>
       <rect width="1200" height="900" fill="#10151d"/>
-      <circle cx="210" cy="190" r="170" fill="{accent}" opacity="0.55" filter="url(#blur)"/>
-      <circle cx="970" cy="250" r="210" fill="{accent2}" opacity="0.42" filter="url(#blur)"/>
-      <path d="M150 650 C330 520 460 720 620 590 C760 475 890 520 1050 430" fill="none" stroke="url(#g)" stroke-width="34" stroke-linecap="round" opacity="0.78"/>
-      <rect x="90" y="90" width="1020" height="700" rx="46" fill="none" stroke="rgba(255,255,255,.24)" stroke-width="3"/>
-      <text x="110" y="710" fill="white" font-size="76" font-family="Inter, Arial, sans-serif" font-weight="800">{safe_title}</text>
-      <text x="116" y="768" fill="rgba(255,255,255,.76)" font-size="34" font-family="Inter, Arial, sans-serif">{safe_category} chatbot</text>
+      <path d="M110 680 C310 500 460 720 650 560 C800 430 920 500 1090 350" fill="none" stroke="url(#g)" stroke-width="42" stroke-linecap="round" opacity="0.8"/>
+      <rect x="86" y="80" width="1028" height="710" rx="42" fill="none" stroke="rgba(255,255,255,.24)" stroke-width="3"/>
+      <text x="112" y="155" fill="{accent}" font-size="30" font-family="Inter, Arial" font-weight="800">{safe_category} / {feature["label"]}</text>
+      <text x="112" y="700" fill="white" font-size="76" font-family="Inter, Arial" font-weight="800">{safe_title}</text>
+      <text x="116" y="758" fill="rgba(255,255,255,.76)" font-size="32" font-family="Inter, Arial">{layout["label"]}</text>
     </svg>
     """
 
 
-def build() -> str:
-    theme = pick_theme()
-    slug, title, category, focus = theme["slug"], theme["title"], theme["category"], theme["focus"]
-    demo, accent, accent2 = theme["demo"], theme["accent"], theme["accent2"]
-    now = datetime.now(timezone.utc)
-    stamp = now.strftime("%Y-%m-%d-%H%M%Sz")
-    made = now.strftime("%Y-%m-%d %H:%M UTC")
-    folder = OUT / f"{slug}-chatbot-{stamp}"
-    project_path = folder.relative_to(ROOT).as_posix()
-    system = f"You are {title}, a premium practical chatbot for {focus}. Ask sharp clarifying questions when useful. Give crisp, safe, specific, high-quality answers with next actions."
-    photo = image_url(theme)
+def screenshot_svg(title: str, category: str, accent: str, accent2: str, layout: dict, feature: dict) -> str:
+    safe_title = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return f"""
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1000" role="img" aria-label="{safe_title} screenshot">
+      <rect width="1440" height="1000" fill="#0f131b"/>
+      <rect x="70" y="64" width="1300" height="820" rx="28" fill="#151b25" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
+      <rect x="105" y="108" width="510" height="720" rx="18" fill="url(#g)"/>
+      <rect x="660" y="108" width="675" height="120" rx="18" fill="#202938"/>
+      <rect x="660" y="260" width="675" height="350" rx="18" fill="#111827"/>
+      <rect x="660" y="645" width="675" height="92" rx="18" fill="#f8fafc"/>
+      <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="{accent}"/><stop offset="1" stop-color="{accent2}"/></linearGradient></defs>
+      <text x="140" y="715" fill="#fff" font-size="56" font-family="Inter, Arial" font-weight="800">{safe_title}</text>
+      <text x="690" y="178" fill="{accent}" font-size="24" font-family="Inter, Arial" font-weight="800">{category} / {layout["label"]}</text>
+      <text x="690" y="330" fill="#f8fafc" font-size="34" font-family="Inter, Arial" font-weight="800">{feature["label"]}</text>
+      <text x="690" y="385" fill="#cbd5e1" font-size="26" font-family="Inter, Arial">Premium browser demo with unique template and palette.</text>
+    </svg>
+    """
 
-    write(folder / "README.md", f"""
-    # {title}
 
-    A premium browser-demo chatbot generated by automation pipeline.
-
-    ## Browser Demo
-
-    Open `public/index.html` in a browser. Demo mode works without setup and includes a visual cover.
-
-    ## Optional Real AI Mode
-
-    Deploy this folder to Vercel and set `OPENAI_API_KEY`, or let visitors enter their own OpenAI API key in the browser UI. Browser-entered keys stay in `sessionStorage`.
-
-    ## Folder
-
-    `{project_path}`
-    """)
-    write(folder / "public/cover.svg", cover_svg(title, category, accent, accent2))
-    write(folder / "package.json", json.dumps({"name": f"{slug}-chatbot", "version": "1.0.0", "type": "module", "scripts": {"dev": "vercel dev"}, "dependencies": {"@vercel/node": "^3.2.27", "openai": "^5.0.0"}, "devDependencies": {"vercel": "^34.3.0"}, "engines": {"node": ">=18"}}, indent=2))
-    write(folder / "vercel.json", '{\n  "version": 2,\n  "routes": [\n    { "src": "/api/chat", "dest": "/api/chat.js" },\n    { "src": "/(.*)", "dest": "/public/$1" }\n  ]\n}')
-    write(folder / "api/chat.js", f"""
-    import OpenAI from 'openai';
-
-    export default async function handler(req, res) {{
-      if (req.method !== 'POST') return res.status(405).json({{ error: 'Method not allowed.' }});
-      const visitorKey = req.headers.authorization?.replace(/^Bearer\s+/i, '') || req.body?.apiKey;
-      const apiKey = process.env.OPENAI_API_KEY || visitorKey;
-      if (!apiKey) return res.status(400).json({{ error: 'OpenAI API key required for real AI mode.' }});
-      const messages = Array.isArray(req.body?.messages) ? req.body.messages.slice(-12) : [];
-      const input = messages.map((m) => ({{ role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content || '').slice(0, 2400) }}));
-      const client = new OpenAI({{ apiKey }});
-      const response = await client.responses.create({{ model: process.env.OPENAI_MODEL || 'gpt-4.1-mini', instructions: {json.dumps(system)}, input }});
-      return res.status(200).json({{ reply: response.output_text || 'Please try again.' }});
-    }}
-    """)
-    write(folder / "public/index.html", f"""
+def render_index(title: str, category: str, photo: str, layout: dict, feature: dict) -> str:
+    chips = "".join(f"<button type=\"button\" class=\"chip\">{chip}</button>" for chip in feature["chips"])
+    return f"""
     <!doctype html>
     <html lang="en">
     <head>
@@ -264,57 +289,82 @@ def build() -> str:
       <title>{title}</title>
       <link rel="stylesheet" href="style.css">
     </head>
-    <body>
-      <main class="app-shell">
+    <body data-variant="{layout["id"]}" data-feature="{feature["id"]}">
+      <main class="app-shell {layout["body"]}">
         <section class="hero">
           <img src="{photo}" alt="{category} visual" onerror="this.onerror=null;this.src='cover.svg';">
-          <div class="hero-copy"><p>{category}</p><h1>{title}</h1><span>Premium browser demo</span></div>
+          <div class="hero-copy"><p>{category}</p><h1>{title}</h1><span>{layout["label"]}</span></div>
         </section>
         <section class="chat">
-          <header><div><p>{category}</p><h2>{title}</h2></div><span id="status">demo ready</span></header>
+          <header><div><p>{feature["label"]}</p><h2>{title}</h2></div><span id="status">demo ready</span></header>
+          <aside class="tool-panel"><strong>Starter actions</strong><div class="chips">{chips}</div><small id="quality">Premium variant: {layout["id"]}</small></aside>
           <form id="keyForm" class="key-form"><input id="apiKey" type="password" placeholder="Optional OpenAI API key"><button>Use Key</button></form>
           <div id="messages"></div>
-          <form id="chatForm" class="chat-form"><input id="text" placeholder="Ask this chatbot for a sharp answer..."><button>Send</button></form>
+          <form id="chatForm" class="chat-form"><input id="text" placeholder="Ask for a sharp answer..."><button>Send</button></form>
         </section>
       </main>
       <script src="script.js"></script>
     </body>
     </html>
-    """)
-    write(folder / "public/style.css", f"""
+    """
+
+
+def render_style(accent: str, accent2: str, layout: dict) -> str:
+    if layout["id"] == "studio-board":
+        grid = "grid-template-columns: minmax(360px, .72fr) minmax(420px, 1.28fr);"
+        hero_min = "100vh"
+        chat_bg = f"linear-gradient(135deg, #111318, #172033 55%, {accent}22)"
+    elif layout["id"] == "insight-deck":
+        grid = "grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr);"
+        hero_min = "92vh"
+        chat_bg = f"radial-gradient(circle at 85% 10%, {accent2}2d, transparent 24rem), #10151d"
+    else:
+        grid = "grid-template-columns: minmax(320px, .9fr) minmax(380px, 1.1fr);"
+        hero_min = "100vh"
+        chat_bg = f"radial-gradient(circle at 14% 12%, {accent}24, transparent 22rem), radial-gradient(circle at 90% 20%, {accent2}24, transparent 24rem), #10151d"
+    return f"""
     :root {{ color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #111318; color: #f8fafc; }}
     * {{ box-sizing: border-box; }}
     body {{ margin: 0; min-height: 100vh; background: #111318; }}
-    .app-shell {{ min-height: 100vh; display: grid; grid-template-columns: minmax(320px, 0.9fr) minmax(380px, 1.1fr); }}
-    .hero {{ position: relative; min-height: 100vh; overflow: hidden; background: #121923; }}
+    .app-shell {{ min-height: 100vh; display: grid; {grid} }}
+    .hero {{ position: relative; min-height: {hero_min}; overflow: hidden; background: #121923; }}
     .hero img {{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(1.08) contrast(1.04); }}
-    .hero::after {{ content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,12,18,.18), rgba(8,12,18,.84)); }}
+    .hero::after {{ content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,12,18,.12), rgba(8,12,18,.86)); }}
     .hero-copy {{ position: absolute; z-index: 1; left: 32px; right: 32px; bottom: 34px; }}
     .hero-copy p, header p {{ margin: 0 0 8px; color: {accent}; text-transform: uppercase; font-size: .75rem; letter-spacing: .08em; font-weight: 800; }}
-    h1 {{ margin: 0 0 14px; font-size: clamp(2.25rem, 6vw, 4.7rem); line-height: .95; max-width: 760px; }}
-    .hero-copy span {{ display: inline-flex; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 8px 12px; background: rgba(0,0,0,.24); }}
-    .chat {{ min-height: 100vh; display: grid; grid-template-rows: auto auto 1fr auto; background: radial-gradient(circle at 14% 12%, {accent}24, transparent 22rem), radial-gradient(circle at 90% 20%, {accent2}24, transparent 24rem), #10151d; }}
-    header, form {{ display: grid; gap: 10px; padding: 18px 22px; border-bottom: 1px solid #ffffff1a; }}
+    h1 {{ margin: 0 0 14px; font-size: clamp(2.2rem, 6vw, 4.8rem); line-height: .95; max-width: 760px; }}
+    .hero-copy span, .chip {{ display: inline-flex; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 8px 12px; background: rgba(0,0,0,.24); color: #fff; }}
+    .chat {{ min-height: 100vh; display: grid; grid-template-rows: auto auto auto 1fr auto; background: {chat_bg}; }}
+    header, form, .tool-panel {{ display: grid; gap: 10px; padding: 18px 22px; border-bottom: 1px solid #ffffff1a; }}
     header {{ grid-template-columns: 1fr auto; align-items: center; }}
     h2 {{ margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); }}
     #status {{ border: 1px solid {accent}; color: {accent}; padding: 6px 10px; border-radius: 999px; font-size: .78rem; white-space: nowrap; }}
+    .chips {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+    .chip {{ cursor: pointer; font: inherit; color: #f8fafc; }}
     #messages {{ padding: 22px; display: flex; flex-direction: column; gap: 14px; overflow: auto; }}
-    .msg {{ max-width: min(84%, 620px); padding: 12px 14px; border-radius: 8px; line-height: 1.5; white-space: pre-wrap; background: #202936; border: 1px solid rgba(255,255,255,.08); }}
+    .msg {{ max-width: min(84%, 620px); padding: 12px 14px; border-radius: 8px; line-height: 1.5; white-space: pre-wrap; background: #202936; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 18px 42px rgba(0,0,0,.22); }}
     .user {{ align-self: flex-end; background: {accent}; color: #061014; border-color: transparent; }}
     form {{ grid-template-columns: 1fr auto; }}
     input, button {{ min-height: 46px; border: 0; border-radius: 8px; font: inherit; }}
     input {{ padding: 0 14px; background: #f8fafc; color: #111318; min-width: 0; }}
     button {{ padding: 0 18px; background: {accent2}; color: #07110c; font-weight: 800; cursor: pointer; }}
     button:disabled {{ opacity: .7; cursor: wait; }}
-    @media (max-width: 820px) {{ .app-shell {{ grid-template-columns: 1fr; }} .hero {{ min-height: 42vh; }} .chat {{ min-height: 58vh; }} }}
-    @media (max-width: 560px) {{ .hero-copy {{ left: 20px; right: 20px; bottom: 22px; }} header, form {{ grid-template-columns: 1fr; }} h1 {{ font-size: 2.3rem; }} }}
-    """)
-    write(folder / "public/script.js", f"""
+    @media (max-width: 860px) {{ .app-shell {{ grid-template-columns: 1fr; }} .hero {{ min-height: 42vh; }} .chat {{ min-height: 58vh; }} }}
+    @media (max-width: 560px) {{ .hero-copy {{ left: 20px; right: 20px; bottom: 22px; }} header, form {{ grid-template-columns: 1fr; }} h1 {{ font-size: 2.25rem; }} }}
+    """
+
+
+def render_script(demo: str, feature: dict, layout: dict) -> str:
+    chips = json.dumps(feature["chips"])
+    opener = json.dumps(demo)
+    return f"""
     const messages = document.querySelector('#messages');
     const text = document.querySelector('#text');
     const apiInput = document.querySelector('#apiKey');
     const statusEl = document.querySelector('#status');
+    const qualityEl = document.querySelector('#quality');
     const sendButton = document.querySelector('#chatForm button');
+    const quickActions = {chips};
     let apiKey = sessionStorage.getItem('openai_api_key') || '';
     const history = [];
 
@@ -330,6 +380,19 @@ def build() -> str:
       sendButton.disabled = isBusy;
       statusEl.textContent = isBusy ? 'thinking' : apiKey ? 'real AI ready' : 'demo ready';
     }}
+
+    function demoReply(value) {{
+      const chosen = quickActions.find((item) => value.toLowerCase().includes(item.toLowerCase())) || '{feature["label"]}';
+      return `${{chosen}} mode: {demo} Requested focus: "${{value}}".`;
+    }}
+
+    document.querySelectorAll('.chip').forEach((button) => {{
+      button.addEventListener('click', () => {{
+        text.value = `${{button.textContent}}: `;
+        text.focus();
+        qualityEl.textContent = `Premium variant: {layout["id"]} / ${{button.textContent}}`;
+      }});
+    }});
 
     document.querySelector('#keyForm').addEventListener('submit', (event) => {{
       event.preventDefault();
@@ -350,7 +413,7 @@ def build() -> str:
       history.push({{ role: 'user', content: value }});
       setBusy(true);
       if (!apiKey) {{
-        const reply = {json.dumps(demo)};
+        const reply = demoReply(value);
         history.push({{ role: 'assistant', content: reply }});
         setTimeout(() => {{ add(reply); setBusy(false); }}, 220);
         return;
@@ -362,19 +425,104 @@ def build() -> str:
         history.push({{ role: 'assistant', content: reply }});
         add(reply);
       }} catch {{
-        add({json.dumps(demo)});
+        add(demoReply(value));
       }} finally {{
         setBusy(false);
       }}
     }});
 
-    add({json.dumps(demo)});
+    add({opener});
+    """
+
+
+def build() -> str:
+    theme = pick_theme()
+    slug, title, category, focus = theme["slug"], theme["title"], theme["category"], theme["focus"]
+    demo = theme["demo"]
+    used_layouts, used_palettes, used_signatures = used_variants()
+    layout = choose_unused_dict(slug, LAYOUTS, used_layouts, "id", "layout")
+    feature = choice_for(slug, FEATURES, "feature")
+    accent, accent2 = choose_unused_palette(slug, used_palettes)
+    palette_id = "-".join((accent, accent2))
+    now = datetime.now(timezone.utc)
+    stamp = now.strftime("%Y-%m-%d-%H%M%Sz")
+    made = now.strftime("%Y-%m-%d %H:%M UTC")
+    folder = OUT / f"{slug}-chatbot-{stamp}"
+    demo_folder = DOCS / folder.name
+    project_path = folder.relative_to(ROOT).as_posix()
+    live_demo = f"{PAGES_BASE}/{folder.name}/"
+    code_signature = hashlib.sha1(f"{slug}:{layout['id']}:{feature['id']}:{palette_id}:{stamp}".encode("utf-8")).hexdigest()
+    if code_signature in used_signatures:
+        raise SystemExit("Generated code signature already exists; refusing duplicate chatbot code.")
+    system = f"You are {title}, a premium practical chatbot for {focus}. Use the {feature['label']} interaction style and keep answers crisp, specific, and action-oriented."
+    photo = image_url(theme)
+
+    write(folder / "README.md", f"""
+    # {title}
+
+    A premium browser-demo chatbot generated by automation pipeline.
+
+    ## Premium Build
+
+    - Layout variant: {layout["label"]}
+    - Interaction feature: {feature["label"]}
+    - Unique palette: `{palette_id}`
+    - Visual cover with image fallback
+    - Screenshot asset: `screenshots/preview.svg`
+    - Browser demo mode plus optional Vercel/OpenAI mode
+
+    ## Live Demo
+
+    Browser demo link when GitHub Pages is enabled:
+
+    {live_demo}
+
+    You can also open `public/index.html` in a browser. Demo mode works without setup.
+
+    ## Optional Real AI Mode
+
+    Deploy this folder to Vercel and set `OPENAI_API_KEY`, or let visitors enter their own OpenAI API key in the browser UI. Browser-entered keys stay in `sessionStorage`.
+
+    ## Folder
+
+    `{project_path}`
     """)
+    write(folder / "public/cover.svg", cover_svg(title, category, accent, accent2, layout, feature))
+    write(folder / "screenshots/preview.svg", screenshot_svg(title, category, accent, accent2, layout, feature))
+    write(folder / "package.json", json.dumps({"name": f"{slug}-chatbot", "version": "1.0.0", "type": "module", "scripts": {"start": "vercel dev", "dev": "vercel dev"}, "dependencies": {"@vercel/node": "^3.2.27", "openai": "^5.0.0"}, "devDependencies": {"vercel": "^34.3.0"}, "engines": {"node": ">=18"}}, indent=2))
+    write(folder / "vercel.json", '{\n  "version": 2,\n  "routes": [\n    { "src": "/api/chat", "dest": "/api/chat.js" },\n    { "src": "/(.*)", "dest": "/public/$1" }\n  ]\n}')
+    write(folder / "api/chat.js", f"""
+    import OpenAI from 'openai';
+
+    export default async function handler(req, res) {{
+      if (req.method !== 'POST') return res.status(405).json({{ error: 'Method not allowed.' }});
+      const visitorKey = req.headers.authorization?.replace(/^Bearer\\s+/i, '') || req.body?.apiKey;
+      const apiKey = process.env.OPENAI_API_KEY || visitorKey;
+      if (!apiKey) return res.status(400).json({{ error: 'OpenAI API key required for real AI mode.' }});
+      const messages = Array.isArray(req.body?.messages) ? req.body.messages.slice(-12) : [];
+      const input = messages.map((m) => ({{ role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content || '').slice(0, 2400) }}));
+      const client = new OpenAI({{ apiKey }});
+      const response = await client.responses.create({{ model: process.env.OPENAI_MODEL || 'gpt-4.1-mini', instructions: {json.dumps(system)}, input }});
+      return res.status(200).json({{ reply: response.output_text || 'Please try again.' }});
+    }}
+    """)
+    index_html = render_index(title, category, photo, layout, feature)
+    style_css = render_style(accent, accent2, layout)
+    script_js = render_script(demo, feature, layout)
+    write(folder / "public/index.html", index_html)
+    write(folder / "public/style.css", style_css)
+    write(folder / "public/script.js", script_js)
+    write(folder / "project.json", json.dumps({"title": title, "category": category, "layout": layout["id"], "feature": feature["id"], "palette": palette_id, "live_demo": live_demo, "generated_at": made, "code_signature": code_signature}, indent=2))
+    write(demo_folder / "index.html", index_html)
+    write(demo_folder / "style.css", style_css)
+    write(demo_folder / "script.js", script_js)
+    write(demo_folder / "cover.svg", cover_svg(title, category, accent, accent2, layout, feature))
+
     number = next_number(read("README.md"))
-    append_row("README.md", f"| {number} | {title} | {made} | {category} | `{project_path}` | Successful demo with visual cover | Browser demo + Vercel/OpenAI-ready | Not deployed |")
-    append_row("tracking/successful-projects.md", f"| {number} | {title} | {made} | `{project_path}` | Premium visual browser demo created. |")
-    append_row("tracking/model-usage.md", f"| {number} | {title} | Browser rules | gpt-4.1-mini via server/visitor key | generated by {theme['source']} with visual template |")
-    append_row("tracking/deployment-links.md", f"| {number} | {title} | `{project_path}` | Pending | Not deployed |")
+    append_row("README.md", f"| {number} | {title} | {made} | {category} | `{project_path}` | Premium {layout['label']} with {feature['label']} and unique palette | Browser demo + Vercel/OpenAI-ready | {live_demo} |")
+    append_row("tracking/successful-projects.md", f"| {number} | {title} | {made} | `{project_path}` | Premium {layout['label']} chatbot with {feature['label']}, screenshot, and live demo path. |")
+    append_row("tracking/model-usage.md", f"| {number} | {title} | Browser rules | gpt-4.1-mini via server/visitor key | generated by {theme['source']} with {layout['id']} / {feature['id']} / {palette_id} |")
+    append_row("tracking/deployment-links.md", f"| {number} | {title} | `{project_path}` | {live_demo} | GitHub Pages browser demo; Vercel optional for real AI mode |")
     return project_path
 
 
