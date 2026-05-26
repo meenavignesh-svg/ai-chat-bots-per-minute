@@ -7,3 +7,4 @@
 | 3 | BioSignal AI Paper-to-Decision Analyst | OpenAI + Gemini if available | quality-first generation |
 | 4 | BioSignal AI Paper-to-Decision Analyst | OpenAI + Gemini if available | quality-first generation |
 | 5 | MasteryMap AI Learning Diagnostic Studio | OpenAI + Gemini if available | quality-first generation |
+| 6 | ModelBench AI Local LLM Evaluation Console | OpenAI + Gemini if available | quality-first generation |

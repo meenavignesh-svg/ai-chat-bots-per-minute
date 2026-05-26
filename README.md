@@ -62,6 +62,7 @@ The archive is focused on five flagship product families:
 | 3 | BioSignal AI Paper-to-Decision Analyst | 2026-05-26 16:37 UTC | Biotech | `ai-chatbots/biosignal-paper-decision-analyst-2026-05-26-163716z` | $1,500/month diligence workspace | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/biosignal-paper-decision-analyst-2026-05-26-163716z/ |
 | 4 | BioSignal AI Paper-to-Decision Analyst | 2026-05-26 16:45 UTC | Biotech | `ai-chatbots/biosignal-paper-decision-analyst-2026-05-26-164535z` | $1,500/month diligence workspace | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/biosignal-paper-decision-analyst-2026-05-26-164535z/ |
 | 5 | MasteryMap AI Learning Diagnostic Studio | 2026-05-26 16:57 UTC | Education | `ai-chatbots/masterymap-learning-diagnostic-studio-2026-05-26-165707z` | $1,000/month tutoring product add-on | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-165707z/ |
+| 6 | ModelBench AI Local LLM Evaluation Console | 2026-05-26 16:57 UTC | Local LLM | `ai-chatbots/modelbench-local-llm-evaluation-console-2026-05-26-165740z` | $1,250/month private AI evaluation lab | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/modelbench-local-llm-evaluation-console-2026-05-26-165740z/ |
 
 ## Required Secrets
 

@@ -7,3 +7,4 @@
 | 3 | BioSignal AI Paper-to-Decision Analyst | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/biosignal-paper-decision-analyst-2026-05-26-163716z/ | GitHub Pages demo |
 | 4 | BioSignal AI Paper-to-Decision Analyst | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/biosignal-paper-decision-analyst-2026-05-26-164535z/ | GitHub Pages demo |
 | 5 | MasteryMap AI Learning Diagnostic Studio | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-165707z/ | GitHub Pages demo |
+| 6 | ModelBench AI Local LLM Evaluation Console | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/modelbench-local-llm-evaluation-console-2026-05-26-165740z/ | GitHub Pages demo |
