@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local LLM Coach Idea Sprint</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-variant="insight-deck" data-feature="practice-coach">
+  <main class="app-shell deckBody">
+    <section class="hero">
+      <img src="https://source.unsplash.com/1400x1000/?computer%2Cserver%2Cai" alt="Local LLM visual" onerror="this.onerror=null;this.src='cover.svg';">
+      <div class="hero-copy"><p>Local LLM</p><h1>Local LLM Coach Idea Sprint</h1><span>Insight Deck</span></div>
+    </section>
+    <section class="chat">
+      <header><div><p>Practice Coach</p><h2>Local LLM Coach Idea Sprint</h2></div><span id="status">demo ready</span></header>
+      <aside class="tool-panel"><strong>Starter actions</strong><div class="chips"><button type="button" class="chip">Quiz me</button><button type="button" class="chip">Hint</button><button type="button" class="chip">Review</button></div><small id="quality">Premium variant: insight-deck</small></aside>
+      <form id="keyForm" class="key-form"><input id="apiKey" type="password" placeholder="Optional OpenAI API key"><button>Use Key</button></form>
+      <div id="messages"></div>
+      <form id="chatForm" class="chat-form"><input id="text" placeholder="Ask for a sharp answer..."><button>Send</button></form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

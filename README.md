@@ -44,6 +44,7 @@ This repository is built as an experimentation archive: each run creates a new c
 | 4 | RAG Analyst Decision Helper | 2026-05-26 15:47 UTC | RAG | `ai-chatbots/rag-analyst-decision-chatbot-2026-05-26-154709z` | Successful demo with visual cover | Browser demo + Vercel/OpenAI-ready | Not deployed |
 | 5 | Education Navigator Explainer | 2026-05-26 15:50 UTC | Education | `ai-chatbots/learn-nav-explain-chatbot-2026-05-26-155050z` | Successful demo with visual cover | Browser demo + Vercel/OpenAI-ready | Not deployed |
 | 6 | Healthcare Planner Daily Brief | 2026-05-26 16:06 UTC | Healthcare | `ai-chatbots/care-planner-brief-chatbot-2026-05-26-160631z` | Premium Split Command Center with Ops Check and unique palette | Browser demo + Vercel/OpenAI-ready | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/care-planner-brief-chatbot-2026-05-26-160631z/ |
+| 7 | Local LLM Coach Idea Sprint | 2026-05-26 16:07 UTC | Local LLM | `ai-chatbots/local-coach-sprint-chatbot-2026-05-26-160708z` | Premium Insight Deck with Practice Coach and unique palette | Browser demo + Vercel/OpenAI-ready | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/local-coach-sprint-chatbot-2026-05-26-160708z/ |
 
 ## Project Standard
 
