@@ -1,0 +1,98 @@
+name: Generate chatbot project
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chatbot-generator
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check generator syntax
+        run: python -m py_compile tools/chatbot_factory/generate.py
+
+      - name: Generate chatbot
+        run: |
+          python tools/chatbot_factory/generate.py | tee generated-chatbot.txt
+          echo "CHATBOT_PATH=$(sed -n 's/^Created //p' generated-chatbot.txt | tail -n 1)" >> "$GITHUB_ENV"
+
+      - name: Commit and push
+        id: commit_generated
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai-chatbots README.md tracking tools/chatbot_factory
+          if git diff --cached --quiet; then
+            echo "changes_detected=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Add generated chatbot project"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changes_detected=true" >> "$GITHUB_OUTPUT"
+          echo "commit_hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Email chatbot notification
+        if: steps.commit_generated.outputs.changes_detected == 'true'
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          CHATBOT_PATH: ${{ env.CHATBOT_PATH }}
+          COMMIT_HASH: ${{ steps.commit_generated.outputs.commit_hash }}
+        run: |
+          python - <<'PY'
+          import os
+          import smtplib
+          from email.message import EmailMessage
+
+          username = os.environ.get('MAIL_USERNAME', '').strip()
+          password = os.environ.get('MAIL_PASSWORD', '').strip()
+          if not username or not password:
+              print('Mail secrets are missing; skipping email notification.')
+              raise SystemExit(0)
+
+          server = os.environ.get('MAIL_SERVER', '').strip() or 'smtp.gmail.com'
+          port = int(os.environ.get('MAIL_PORT', '').strip() or '465')
+          sender = os.environ.get('MAIL_FROM', '').strip() or username
+          chatbot_path = os.environ.get('CHATBOT_PATH', '').strip() or 'ai-chatbots/'
+          commit_hash = os.environ.get('COMMIT_HASH', '').strip()
+          commit_url = f'https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/commit/{commit_hash}' if commit_hash else 'https://github.com/meenavignesh-svg/ai-chat-bots-per-minute'
+
+          msg = EmailMessage()
+          msg['Subject'] = 'New AI chatbot created'
+          msg['From'] = sender
+          msg['To'] = 'torrickytan@gmail.com'
+          msg.set_content(
+              'A new chatbot project was created.\n\n'
+              f'Project path: {chatbot_path}\n'
+              'Repository: https://github.com/meenavignesh-svg/ai-chat-bots-per-minute\n'
+              f'Commit: {commit_url}\n'
+          )
+
+          with smtplib.SMTP_SSL(server, port) as smtp:
+              smtp.login(username, password)
+              smtp.send_message(msg)
+          print('Email notification sent.')
+          PY
