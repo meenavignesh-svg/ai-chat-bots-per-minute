@@ -5,8 +5,6 @@ on:
     paths:
       - '.github/workflows/generate-chatbot.yml'
       - 'tools/chatbot_factory/**'
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       theme:
