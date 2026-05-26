@@ -1,0 +1,22 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #101318; color: #f8fafc; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 16% 12%, #14b8a630, transparent 28rem), #101318; }
+.workspace { min-height: 100vh; display: grid; grid-template-columns: minmax(360px, .95fr) minmax(460px, 1.05fr); }
+.hero { position: relative; min-height: 100vh; overflow: hidden; display: grid; align-items: end; padding: 34px; }
+.hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #00000005, #000000aa); }
+.hero div { position: relative; z-index: 1; }
+p { color: #14b8a6; margin: 0 0 10px; text-transform: uppercase; font-weight: 900; font-size: .78rem; letter-spacing: .08em; }
+h1 { margin: 0 0 16px; font-size: clamp(2.4rem, 6vw, 5rem); line-height: .95; }
+h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.35rem); }
+.hero span, .chip { display: inline-flex; border: 1px solid #ffffff38; border-radius: 999px; padding: 9px 13px; background: #00000040; }
+.panel { display: grid; grid-template-rows: auto auto auto 1fr auto auto; gap: 18px; padding: 30px; background: linear-gradient(135deg, #111827, #151a24 55%, #a855f720); box-shadow: -30px 0 80px #00000040; }
+.metrics { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 10px; align-items: end; padding: 16px; border: 1px solid #ffffff18; border-radius: 8px; background: #ffffff08; }
+.metrics strong { font-size: 2.6rem; color: #a855f7; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { color: #f8fafc; cursor: pointer; font: inherit; }
+textarea, input { width: 100%; border: 0; border-radius: 8px; padding: 14px; font: inherit; background: #f8fafc; color: #111827; }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+button { border: 0; border-radius: 8px; min-height: 46px; padding: 0 16px; font: inherit; font-weight: 900; background: #14b8a6; color: #07111f; cursor: pointer; }
+#output { min-height: 180px; white-space: pre-wrap; line-height: 1.55; padding: 16px; border: 1px solid #ffffff1f; border-radius: 8px; background: #02061799; }
+@media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } .hero { min-height: 46vh; } .panel { min-height: 54vh; } }

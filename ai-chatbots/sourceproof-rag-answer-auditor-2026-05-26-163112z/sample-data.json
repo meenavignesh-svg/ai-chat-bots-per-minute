@@ -1,0 +1,9 @@
+{
+  "sample_input": "Answer says the policy covers international contractors, but source notes only mention domestic full-time employees.",
+  "expected_outputs": [
+    "score",
+    "risks",
+    "summary",
+    "next_actions"
+  ]
+}

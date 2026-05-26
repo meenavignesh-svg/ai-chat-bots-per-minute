@@ -77,3 +77,4 @@ https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/
 ## Quality Rule
 
 If a generated product does not meet the premium standard, the workflow must fail and commit nothing.
+| 3 | SourceProof AI RAG Answer Auditor | 2026-05-26 16:31 UTC | RAG | `ai-chatbots/sourceproof-rag-answer-auditor-2026-05-26-163112z` | $2,000/month RAG QA suite | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/sourceproof-rag-answer-auditor-2026-05-26-163112z/ |

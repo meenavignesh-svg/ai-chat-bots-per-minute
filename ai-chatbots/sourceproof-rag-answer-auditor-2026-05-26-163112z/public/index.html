@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SourceProof AI RAG Answer Auditor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-product="premium-ai-chatbot">
+  <main class="workspace">
+    <section class="hero">
+      <img src="cover.svg" alt="SourceProof AI RAG Answer Auditor cover">
+      <div><p>RAG</p><h1>SourceProof AI RAG Answer Auditor</h1><span>$2,000/month RAG QA suite</span></div>
+    </section>
+    <section class="panel insights">
+      <header><p>Premium workflow</p><h2>A premium AI workspace for unsupported answers, weak citations, and no repeatable RAG quality review.</h2></header>
+      <div class="metrics"><strong id="score">94</strong><span>quality score</span><strong>5</strong><span>workflow modules</span></div>
+      <div class="chips"><button class="chip" type="button">structured intake</button><button class="chip" type="button">quality scoring</button><button class="chip" type="button">risk review</button><button class="chip" type="button">executive summary</button><button class="chip" type="button">export-ready action plan</button></div>
+      <textarea id="input" rows="8"></textarea>
+      <div class="actions"><button id="sample">Load sample</button><button id="analyze">Analyze</button></div>
+      <label><input id="apiKey" type="password" placeholder="Optional OpenAI API key"></label>
+      <article id="output"></article>
+    </section>
+  </main>
+  <script>window.sampleData = "Answer says the policy covers international contractors, but source notes only mention domestic full-time employees.";</script>
+  <script src="script.js"></script>
+</body>
+</html>
