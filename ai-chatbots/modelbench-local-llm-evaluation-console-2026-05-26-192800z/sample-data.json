@@ -1,0 +1,9 @@
+{
+  "sample_input": "Model A answered quickly but ignored a constraint. Model B was slower but followed format and cited uncertainty.",
+  "expected_outputs": [
+    "score",
+    "risks",
+    "summary",
+    "next_actions"
+  ]
+}
