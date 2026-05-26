@@ -8,18 +8,56 @@
 </head>
 <body data-product="premium-ai-chatbot">
   <main class="workspace">
+    <nav class="topbar">
+      <strong>BioSignal AI</strong>
+      <span>Paper-to-Decision Analyst</span>
+      <button id="sample" type="button">Load sample</button>
+    </nav>
+
     <section class="hero">
       <img src="cover.svg" alt="BioSignal AI Paper-to-Decision Analyst cover">
-      <div><p>Biotech</p><h1>BioSignal AI Paper-to-Decision Analyst</h1><span>$1,500/month diligence workspace</span></div>
+      <div class="hero-copy">
+        <p>Biotech diligence workspace</p>
+        <h1>BioSignal AI Paper-to-Decision Analyst</h1>
+        <span>$1,500/month diligence workspace</span>
+      </div>
     </section>
+
     <section class="panel insights">
-      <header><p>Premium workflow</p><h2>A premium AI workspace for slow paper triage, unclear translational risk, and scattered experiment notes.</h2></header>
-      <div class="metrics"><strong id="score">94</strong><span>quality score</span><strong>5</strong><span>workflow modules</span></div>
-      <div class="chips"><button class="chip" type="button">structured intake</button><button class="chip" type="button">quality scoring</button><button class="chip" type="button">risk review</button><button class="chip" type="button">executive summary</button><button class="chip" type="button">export-ready action plan</button></div>
-      <textarea id="input" rows="8"></textarea>
-      <div class="actions"><button id="sample">Load sample</button><button id="analyze">Analyze</button></div>
-      <label><input id="apiKey" type="password" placeholder="Optional OpenAI API key"></label>
-      <article id="output"></article>
+      <header class="brief">
+        <p>Premium workflow</p>
+        <h2>A desktop-grade AI workspace for paper triage, translational risk review, and next-experiment planning.</h2>
+      </header>
+
+      <div class="metrics" aria-label="Product metrics">
+        <article><strong id="score">94</strong><span>quality score</span></article>
+        <article><strong>5</strong><span>workflow modules</span></article>
+        <article><strong>$1.5k</strong><span>price anchor</span></article>
+      </div>
+
+      <div class="chips" aria-label="Workflow shortcuts">
+        <button class="chip" type="button">structured intake</button>
+        <button class="chip" type="button">quality scoring</button>
+        <button class="chip" type="button">risk review</button>
+        <button class="chip" type="button">executive summary</button>
+        <button class="chip" type="button">export-ready action plan</button>
+      </div>
+
+      <section class="workbench">
+        <label class="input-card">
+          <span>Study notes or abstract</span>
+          <textarea id="input" rows="8"></textarea>
+        </label>
+        <article class="output-card">
+          <span>Decision report</span>
+          <div id="output"></div>
+        </article>
+      </section>
+
+      <footer class="control-row">
+        <input id="apiKey" type="password" placeholder="Optional OpenAI API key">
+        <button id="analyze" type="button">Analyze</button>
+      </footer>
     </section>
   </main>
   <script>window.sampleData = "A CRISPR screen identified pathway X as a resistance marker in organoid models. Validation was limited to two cell lines with no animal data.";</script>
