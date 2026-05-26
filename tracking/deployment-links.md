@@ -9,3 +9,4 @@
 | 5 | MasteryMap AI Learning Diagnostic Studio | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-165707z/ | GitHub Pages demo |
 | 6 | ModelBench AI Local LLM Evaluation Console | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/modelbench-local-llm-evaluation-console-2026-05-26-165740z/ | GitHub Pages demo |
 | 7 | MasteryMap AI Learning Diagnostic Studio | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-170514z/ | GitHub Pages demo |
+| 8 | SourceProof AI RAG Answer Auditor | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/sourceproof-rag-answer-auditor-2026-05-26-170551z/ | GitHub Pages demo |

@@ -64,6 +64,7 @@ The archive is focused on five flagship product families:
 | 5 | MasteryMap AI Learning Diagnostic Studio | 2026-05-26 16:57 UTC | Education | `ai-chatbots/masterymap-learning-diagnostic-studio-2026-05-26-165707z` | $1,000/month tutoring product add-on | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-165707z/ |
 | 6 | ModelBench AI Local LLM Evaluation Console | 2026-05-26 16:57 UTC | Local LLM | `ai-chatbots/modelbench-local-llm-evaluation-console-2026-05-26-165740z` | $1,250/month private AI evaluation lab | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/modelbench-local-llm-evaluation-console-2026-05-26-165740z/ |
 | 7 | MasteryMap AI Learning Diagnostic Studio | 2026-05-26 17:05 UTC | Education | `ai-chatbots/masterymap-learning-diagnostic-studio-2026-05-26-170514z` | $1,000/month tutoring product add-on | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/masterymap-learning-diagnostic-studio-2026-05-26-170514z/ |
+| 8 | SourceProof AI RAG Answer Auditor | 2026-05-26 17:05 UTC | RAG | `ai-chatbots/sourceproof-rag-answer-auditor-2026-05-26-170551z` | $2,000/month RAG QA suite | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/sourceproof-rag-answer-auditor-2026-05-26-170551z/ |
 
 ## Required Secrets
 

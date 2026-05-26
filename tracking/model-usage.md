@@ -9,3 +9,4 @@
 | 5 | MasteryMap AI Learning Diagnostic Studio | OpenAI + Gemini if available | quality-first generation |
 | 6 | ModelBench AI Local LLM Evaluation Console | OpenAI + Gemini if available | quality-first generation |
 | 7 | MasteryMap AI Learning Diagnostic Studio | OpenAI + Gemini if available | quality-first generation |
+| 8 | SourceProof AI RAG Answer Auditor | OpenAI + Gemini if available | quality-first generation |
