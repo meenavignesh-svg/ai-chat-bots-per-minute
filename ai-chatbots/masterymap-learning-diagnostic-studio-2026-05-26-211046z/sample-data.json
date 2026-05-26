@@ -1,0 +1,9 @@
+{
+  "sample_input": "Student explains photosynthesis as plants eating sunlight and says oxygen is the main food product.",
+  "expected_outputs": [
+    "score",
+    "risks",
+    "summary",
+    "next_actions"
+  ]
+}
