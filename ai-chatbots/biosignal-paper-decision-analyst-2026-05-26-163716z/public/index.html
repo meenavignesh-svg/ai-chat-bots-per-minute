@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BioSignal AI Paper-to-Decision Analyst</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-product="premium-ai-chatbot">
+  <main class="workspace">
+    <section class="hero">
+      <img src="cover.svg" alt="BioSignal AI Paper-to-Decision Analyst cover">
+      <div><p>Biotech</p><h1>BioSignal AI Paper-to-Decision Analyst</h1><span>$1,500/month diligence workspace</span></div>
+    </section>
+    <section class="panel insights">
+      <header><p>Premium workflow</p><h2>A premium AI workspace for slow paper triage, unclear translational risk, and scattered experiment notes.</h2></header>
+      <div class="metrics"><strong id="score">94</strong><span>quality score</span><strong>5</strong><span>workflow modules</span></div>
+      <div class="chips"><button class="chip" type="button">structured intake</button><button class="chip" type="button">quality scoring</button><button class="chip" type="button">risk review</button><button class="chip" type="button">executive summary</button><button class="chip" type="button">export-ready action plan</button></div>
+      <textarea id="input" rows="8"></textarea>
+      <div class="actions"><button id="sample">Load sample</button><button id="analyze">Analyze</button></div>
+      <label><input id="apiKey" type="password" placeholder="Optional OpenAI API key"></label>
+      <article id="output"></article>
+    </section>
+  </main>
+  <script>window.sampleData = "A CRISPR screen identified pathway X as a resistance marker in organoid models. Validation was limited to two cell lines with no animal data.";</script>
+  <script src="script.js"></script>
+</body>
+</html>

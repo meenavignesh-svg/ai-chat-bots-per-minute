@@ -1,0 +1,9 @@
+{
+  "sample_input": "A CRISPR screen identified pathway X as a resistance marker in organoid models. Validation was limited to two cell lines with no animal data.",
+  "expected_outputs": [
+    "score",
+    "risks",
+    "summary",
+    "next_actions"
+  ]
+}
