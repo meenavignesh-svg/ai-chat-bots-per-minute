@@ -78,3 +78,4 @@ https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/
 
 If a generated product does not meet the premium standard, the workflow must fail and commit nothing.
 | 3 | SourceProof AI RAG Answer Auditor | 2026-05-26 16:31 UTC | RAG | `ai-chatbots/sourceproof-rag-answer-auditor-2026-05-26-163112z` | $2,000/month RAG QA suite | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/sourceproof-rag-answer-auditor-2026-05-26-163112z/ |
+| 4 | ClaimGuard AI Revenue Integrity Copilot | 2026-05-26 16:33 UTC | Medical Coding | `ai-chatbots/claimguard-revenue-integrity-copilot-2026-05-26-163320z` | $1,200/month clinic pilot | https://meenavignesh-svg.github.io/ai-chat-bots-per-minute/claimguard-revenue-integrity-copilot-2026-05-26-163320z/ |

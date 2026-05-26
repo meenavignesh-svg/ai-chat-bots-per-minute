@@ -1,0 +1,9 @@
+{
+  "sample_input": "Patient follow-up for diabetes and hypertension. Medication adjusted. A1C reviewed. Foot exam discussed but not documented as completed.",
+  "expected_outputs": [
+    "score",
+    "risks",
+    "summary",
+    "next_actions"
+  ]
+}

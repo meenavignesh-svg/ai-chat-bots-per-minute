@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClaimGuard AI Revenue Integrity Copilot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-product="premium-ai-chatbot">
+  <main class="workspace">
+    <section class="hero">
+      <img src="cover.svg" alt="ClaimGuard AI Revenue Integrity Copilot cover">
+      <div><p>Medical Coding</p><h1>ClaimGuard AI Revenue Integrity Copilot</h1><span>$1,200/month clinic pilot</span></div>
+    </section>
+    <section class="panel insights">
+      <header><p>Premium workflow</p><h2>A premium AI workspace for missed claim issues, weak documentation notes, and slow pre-submission review.</h2></header>
+      <div class="metrics"><strong id="score">94</strong><span>quality score</span><strong>5</strong><span>workflow modules</span></div>
+      <div class="chips"><button class="chip" type="button">structured intake</button><button class="chip" type="button">quality scoring</button><button class="chip" type="button">risk review</button><button class="chip" type="button">executive summary</button><button class="chip" type="button">export-ready action plan</button></div>
+      <textarea id="input" rows="8"></textarea>
+      <div class="actions"><button id="sample">Load sample</button><button id="analyze">Analyze</button></div>
+      <label><input id="apiKey" type="password" placeholder="Optional OpenAI API key"></label>
+      <article id="output"></article>
+    </section>
+  </main>
+  <script>window.sampleData = "Patient follow-up for diabetes and hypertension. Medication adjusted. A1C reviewed. Foot exam discussed but not documented as completed.";</script>
+  <script src="script.js"></script>
+</body>
+</html>
