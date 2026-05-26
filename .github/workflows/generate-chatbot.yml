@@ -28,11 +28,16 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Check generator syntax
+        run: python -m py_compile tools/chatbot_factory/generate.py
 
       - name: Generate chatbot and update indexes
         env:
@@ -41,15 +46,26 @@ jobs:
           python tools/chatbot_factory/generate.py | tee generated-chatbot.txt
           echo "CHATBOT_PATH=$(sed -n 's/^Created //p; s/^Generated //p' generated-chatbot.txt | tail -n 1)" >> "$GITHUB_ENV"
 
-      - name: Commit generated project
-        id: auto_commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Add generated chatbot project
-          file_pattern: ai-chatbots/** README.md CHATBOT_CATALOG.md healthcare/** biotech/** education/** automation/** productivity/** medical-coding/** local-llm/** rag/** voice-agents/** tracking/** screenshots/** tags/**
+      - name: Commit and push generated project
+        id: commit_generated
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ai-chatbots README.md CHATBOT_CATALOG.md healthcare biotech education automation productivity medical-coding local-llm rag voice-agents tracking screenshots tags
+          if git diff --cached --quiet; then
+            echo "changes_detected=false" >> "$GITHUB_OUTPUT"
+            echo "commit_hash=" >> "$GITHUB_OUTPUT"
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Add generated chatbot project"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changes_detected=true" >> "$GITHUB_OUTPUT"
+          echo "commit_hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Email chatbot notification
-        if: steps.auto_commit.outputs.changes_detected == 'true'
+        if: steps.commit_generated.outputs.changes_detected == 'true'
         env:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
@@ -57,7 +73,7 @@ jobs:
           MAIL_PORT: ${{ secrets.MAIL_PORT }}
           MAIL_FROM: ${{ secrets.MAIL_FROM }}
           CHATBOT_PATH: ${{ env.CHATBOT_PATH }}
-          COMMIT_HASH: ${{ steps.auto_commit.outputs.commit_hash }}
+          COMMIT_HASH: ${{ steps.commit_generated.outputs.commit_hash }}
         run: |
           python - <<'PY'
           import os
