@@ -2,11 +2,9 @@
 
 ## Download
 
-**Windows installer:** build and download `ProfessorSetup.exe` from GitHub Actions:
+**Windows app installer:** [Download ProfessorSetup.exe from the latest release](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/releases/latest)
 
-[Build Windows Installer](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/actions/workflows/build-windows-installer.yml)
-
-This creates a normal Windows installer with a Start Menu shortcut and optional Desktop shortcut, similar to installing Chrome.
+Download `ProfessorSetup.exe`, open it, and install Professor like a normal Windows app. It adds a Start Menu shortcut and optional Desktop shortcut.
 
 **Source ZIP:** [Download source ZIP](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/archive/refs/heads/main.zip)
 
@@ -35,14 +33,13 @@ This project is original code, built in the style of common desktop voice assist
 
 ## Install Like A Windows App
 
-1. Open [Build Windows Installer](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/actions/workflows/build-windows-installer.yml).
-2. Click **Run workflow**.
-3. Wait until the run finishes.
-4. Open the finished run.
-5. Download the `ProfessorSetup` artifact.
-6. Extract it and double-click `ProfessorSetup.exe`.
+1. Open [latest release](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/releases/latest).
+2. Download `ProfessorSetup.exe`.
+3. Double-click `ProfessorSetup.exe`.
+4. Finish the installer.
+5. Open Professor from the Start Menu or Desktop shortcut.
 
-After install, open Professor from the Start Menu or the Desktop shortcut.
+If the latest release is not visible yet, open [Build Windows Installer](https://github.com/meenavignesh-svg/ai-chat-bots-per-minute/actions/workflows/build-windows-installer.yml), wait for the run to finish, then check the latest release again.
 
 ## Safety
 
