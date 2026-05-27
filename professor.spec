@@ -8,6 +8,7 @@ a = Analysis(
     binaries=[],
     datas=[],
     hiddenimports=[
+        "permissions",
         "pyttsx3.drivers",
         "pyttsx3.drivers.sapi5",
         "speech_recognition",
