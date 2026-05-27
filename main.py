@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import config
 from commands import handle_command
+from permissions import first_run_setup
 from speech import Speech
 
 
@@ -14,6 +15,7 @@ def remove_wake_word(text: str) -> str:
 
 
 def main() -> None:
+    permissions = first_run_setup()
     speech = Speech()
     speech.say("Professor is ready. Say Professor, then your command.")
 
@@ -31,7 +33,7 @@ def main() -> None:
             continue
 
         command = remove_wake_word(heard)
-        response, running = handle_command(command)
+        response, running = handle_command(command, permissions)
         speech.say(response)
 
 
