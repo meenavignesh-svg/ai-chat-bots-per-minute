@@ -26,26 +26,35 @@ WAKE_WORD = "helix"
 APP_NAME = "HelixMind Bio AI"
 LOG_FILE = Path("helixmind_session_log.txt")
 WORKSPACE = Path("HelixMind_Workspace")
-SENSITIVE_WORDS = ("password", "passcode", "otp", "api key", "secret", "token", "private key")
+SENSITIVE_WORDS = ("password", "passcode", "otp", "api key", "secret", "token", "private key", "credit card", "card number", "cvv")
 BLOCKED_KEYS = {"delete", "backspace"}
 BLOCKED_HOTKEYS = {"alt+f4", "ctrl+w", "ctrl+q", "shift+delete"}
 
 
 class HelixMindBioAI:
     def __init__(self) -> None:
+        self.fast_mode = os.getenv("HELIXMIND_FAST", "1").strip().lower() not in {"0", "false", "off", "no"}
+        self.voice_output_enabled = os.getenv("HELIXMIND_VOICE_OUTPUT", "0").strip().lower() in {"1", "true", "on", "yes"}
         self.engine = pyttsx3.init()
-        self.engine.setProperty("rate", 172)
+        self.engine.setProperty("rate", 220 if self.fast_mode else 172)
         self.recognizer = sr.Recognizer()
         self.session_notes: list[str] = []
         self.job_queue: list[str] = []
         self.completed_jobs: list[str] = []
         self.active_project = "bioinformatics workspace"
         self.presence_enabled = True
+        if pyautogui is not None:
+            pyautogui.PAUSE = 0.02 if self.fast_mode else 0.10
         WORKSPACE.mkdir(exist_ok=True)
+
+    def action_delay(self) -> float:
+        return 0.08 if self.fast_mode else 0.40
 
     def speak(self, text: str) -> None:
         print(f"\n{APP_NAME}: {text}\n")
         self.write_log(f"HELIXMIND: {text}")
+        if self.fast_mode and not self.voice_output_enabled:
+            return
         try:
             self.engine.say(text.replace("\n", ". "))
             self.engine.runAndWait()
@@ -63,8 +72,8 @@ class HelixMindBioAI:
     def listen(self) -> str:
         with sr.Microphone() as source:
             print("Listening...")
-            self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
-            audio = self.recognizer.listen(source, timeout=6, phrase_time_limit=12)
+            self.recognizer.adjust_for_ambient_noise(source, duration=0.2 if self.fast_mode else 0.5)
+            audio = self.recognizer.listen(source, timeout=4 if self.fast_mode else 6, phrase_time_limit=8 if self.fast_mode else 12)
         try:
             text = self.recognizer.recognize_google(audio)
             print(f"You: {text}")
@@ -84,17 +93,36 @@ class HelixMindBioAI:
         command = self.normalize(command)
 
         if command in {"exit", "quit", "stop", "sleep"}:
-            return "I am closing the session. Your local log is saved in helixmind_session_log.txt.", False
+            return "Closing. Local log saved in helixmind_session_log.txt.", False
         if command in {"help", "commands", "what can you do"}:
             return self.help_text(), True
         if command in {"status", "what are you doing", "are you there"}:
             return self.status_report(), True
+        if command in {"fast mode", "work fast", "speed up"}:
+            self.fast_mode = True
+            self.voice_output_enabled = False
+            if pyautogui is not None:
+                pyautogui.PAUSE = 0.02
+            self.engine.setProperty("rate", 220)
+            return "Fast mode on. Voice output is off and desktop delays are reduced.", True
+        if command in {"normal mode", "slow mode"}:
+            self.fast_mode = False
+            if pyautogui is not None:
+                pyautogui.PAUSE = 0.10
+            self.engine.setProperty("rate", 172)
+            return "Normal mode on.", True
+        if command in {"voice output on", "talk out loud"}:
+            self.voice_output_enabled = True
+            return "Voice output on.", True
+        if command in {"voice output off", "silent mode"}:
+            self.voice_output_enabled = False
+            return "Voice output off. I will respond in text only.", True
         if command in {"presence on", "stay awake"}:
             self.presence_enabled = True
-            return "Presence mode is on. I will stay ready for bioinformatics, desktop control, and safe work.", True
+            return "Presence mode on.", True
         if command in {"presence off", "quiet mode"}:
             self.presence_enabled = False
-            return "Quiet mode is on. I will only respond when you type or speak.", True
+            return "Quiet mode on.", True
         if command.startswith("project "):
             self.active_project = command.replace("project ", "", 1).strip() or self.active_project
             return f"Active project set to {self.active_project}.", True
@@ -113,6 +141,8 @@ class HelixMindBioAI:
         return self.help_text(), True
 
     def with_personality(self, response: str) -> str:
+        if self.fast_mode:
+            return response
         if not self.presence_enabled:
             return response
         prefix = "I finished that."
@@ -129,7 +159,7 @@ class HelixMindBioAI:
 
     def run_desktop_command(self, command: str) -> str | None:
         if command == "desktop status":
-            return "Desktop control is ready." if self.desktop_ready() else "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop ready." if self.desktop_ready() else "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         if command.startswith("open any app "):
             return self.open_any_app(command.replace("open any app ", "", 1))
         if command.startswith("type text "):
@@ -148,33 +178,33 @@ class HelixMindBioAI:
 
     def open_any_app(self, app_name: str) -> str:
         if not self.desktop_ready():
-            return "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         app_name = app_name.strip()
         if not app_name:
             return "Use: open any app chrome"
         pyautogui.hotkey("win")
-        time.sleep(0.4)
+        time.sleep(self.action_delay())
         pyperclip.copy(app_name)
         pyautogui.hotkey("ctrl", "v")
-        time.sleep(0.4)
+        time.sleep(self.action_delay())
         pyautogui.press("enter")
-        return f"I asked Windows to open: {app_name}."
+        return f"Opening: {app_name}."
 
     def type_text(self, text: str) -> str:
         if not self.desktop_ready():
-            return "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         if self.unsafe_text(text):
-            return "Blocked: I will not type passwords, secrets, tokens, OTPs, or API keys."
+            return "Blocked: I will not type passwords, secrets, tokens, OTPs, API keys, or credit card data."
         pyperclip.copy(text)
         pyautogui.hotkey("ctrl", "v")
-        return "Typed the requested text into the active window."
+        return "Typed."
 
     def paste_text(self, text: str) -> str:
         return self.type_text(text)
 
     def press_key(self, key: str) -> str:
         if not self.desktop_ready():
-            return "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         key = key.strip().lower()
         if key in BLOCKED_KEYS:
             return f"Blocked: {key} is not allowed as a direct command."
@@ -183,7 +213,7 @@ class HelixMindBioAI:
 
     def hotkey(self, keys_text: str) -> str:
         if not self.desktop_ready():
-            return "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         cleaned = keys_text.strip().lower().replace(" ", "")
         if cleaned in BLOCKED_HOTKEYS:
             return f"Blocked: {cleaned} is not allowed."
@@ -191,48 +221,48 @@ class HelixMindBioAI:
         if not keys or len(keys) > 4:
             return "Use: hotkey ctrl+s"
         pyautogui.hotkey(*keys)
-        return f"Pressed hotkey: {'+'.join(keys)}."
+        return f"Hotkey {'+'.join(keys)}."
 
     def wait_seconds(self, text: str) -> str:
-        match = re.search(r"\d+", text)
-        seconds = int(match.group()) if match else 1
-        seconds = max(1, min(seconds, 30))
+        match = re.search(r"\d+(?:\.\d+)?", text)
+        seconds = float(match.group()) if match else 0.2
+        seconds = max(0.05, min(seconds, 30.0))
         time.sleep(seconds)
-        return f"Waited {seconds} second(s)."
+        return f"Waited {seconds:g}s."
 
     def click_mouse(self, command: str) -> str:
         if not self.desktop_ready():
-            return "Desktop control dependencies are missing. Run install_helixmind_bio_ai.bat again."
+            return "Desktop dependencies missing. Run install_helixmind_bio_ai.bat again."
         match = re.search(r"click\s+(\d+)\s+(\d+)", command)
         if match:
             x, y = int(match.group(1)), int(match.group(2))
             pyautogui.click(x, y)
-            return f"Clicked at {x}, {y}."
+            return f"Clicked {x},{y}."
         pyautogui.click()
-        return "Clicked the current mouse position."
+        return "Clicked."
 
     def run_work_command(self, command: str) -> str | None:
         if command.startswith("note "):
             note = command.replace("note ", "", 1).strip()
             self.session_notes.append(note)
-            return f"Added session note {len(self.session_notes)}."
+            return f"Note {len(self.session_notes)} added."
         if command in {"show notes", "list notes"}:
             if not self.session_notes:
-                return "No session notes yet. Tell me: helix note your observation."
-            return "Session notes:\n" + "\n".join(f"{i + 1}. {note}" for i, note in enumerate(self.session_notes))
+                return "No notes."
+            return "Notes:\n" + "\n".join(f"{i + 1}. {note}" for i, note in enumerate(self.session_notes))
         if command.startswith("add job "):
             job = command.replace("add job ", "", 1).strip()
             if not job:
                 return "Give me a job after add job."
             self.job_queue.append(job)
-            return f"Job added. Queue length is now {len(self.job_queue)}."
+            return f"Job added. Queue: {len(self.job_queue)}."
         if command in {"show jobs", "list jobs"}:
             return self.show_jobs()
         if command in {"run jobs", "process jobs", "start work"}:
             return self.run_jobs()
         if command in {"clear jobs", "empty jobs"}:
             self.job_queue.clear()
-            return "Job queue cleared."
+            return "Jobs cleared."
         if command.startswith("open folder "):
             return self.open_folder(command.replace("open folder ", "", 1))
         if command.startswith("create folder "):
@@ -255,7 +285,7 @@ class HelixMindBioAI:
         if command.startswith("search web for "):
             query = command.replace("search web for ", "", 1).strip()
             webbrowser.open("https://www.google.com/search?q=" + query.replace(" ", "+"))
-            return f"Searching the web for {query}."
+            return f"Searching: {query}."
         return None
 
     def run_bio_command(self, command: str) -> str | None:
@@ -300,31 +330,35 @@ class HelixMindBioAI:
 
     def run_jobs(self) -> str:
         if not self.job_queue:
-            return "No queued jobs. Add one with: helix add job gc content of ATGCGT."
+            return "No queued jobs."
         reports = []
+        start = time.perf_counter()
         while self.job_queue:
             job = self.job_queue.pop(0)
-            response = self.run_desktop_command(job) or self.run_work_command(job) or self.run_bio_command(job) or f"I could not run this job: {job}"
+            response = self.run_desktop_command(job) or self.run_work_command(job) or self.run_bio_command(job) or f"Could not run: {job}"
             self.completed_jobs.append(job)
-            reports.append(f"Job: {job}\nResult:\n{response}")
+            reports.append(f"{job}: {response}" if self.fast_mode else f"Job: {job}\nResult:\n{response}")
+        elapsed = time.perf_counter() - start
+        if self.fast_mode:
+            return f"Processed {len(reports)} job(s) in {elapsed:.2f}s.\n" + "\n".join(reports)
         return "I processed the queued jobs.\n\n" + "\n\n".join(reports)
 
     def show_jobs(self) -> str:
         if not self.job_queue:
-            return "No queued jobs. I am ready for desktop control, bioinformatics, notes, files, folders, searches, and app opening."
+            return "No queued jobs."
         return "Queued jobs:\n" + "\n".join(f"{i + 1}. {job}" for i, job in enumerate(self.job_queue))
 
     def status_report(self) -> str:
         desktop = "ready" if self.desktop_ready() else "missing dependencies"
         return (
-            f"I am active inside your local console for {self.active_project}.\n"
+            f"Active project: {self.active_project}\n"
             f"Workspace: {WORKSPACE.resolve()}\n"
             f"Desktop control: {desktop}\n"
+            f"Fast mode: {'on' if self.fast_mode else 'off'}\n"
+            f"Voice output: {'on' if self.voice_output_enabled else 'off'}\n"
             f"Queued jobs: {len(self.job_queue)}\n"
-            f"Completed jobs this session: {len(self.completed_jobs)}\n"
-            f"Session notes: {len(self.session_notes)}\n"
-            f"Presence mode: {'on' if self.presence_enabled else 'off'}\n"
-            "I can open apps, type into the active window, press keys, and do bioinformatics work. I still block secrets, destructive actions, and hidden control."
+            f"Completed jobs: {len(self.completed_jobs)}\n"
+            f"Notes: {len(self.session_notes)}"
         )
 
     def safe_workspace_path(self, path_text: str) -> Path:
@@ -342,7 +376,7 @@ class HelixMindBioAI:
         try:
             path = self.safe_workspace_path(folder_text)
             path.mkdir(parents=True, exist_ok=True)
-            return f"Created folder: {path}"
+            return f"Created: {path}"
         except Exception as exc:
             return f"Could not create folder: {exc}"
 
@@ -355,7 +389,7 @@ class HelixMindBioAI:
             path = self.safe_workspace_path(filename)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content + "\n", encoding="utf-8")
-            return f"Wrote file: {path}"
+            return f"Wrote: {path}"
         except Exception as exc:
             return f"Could not write file: {exc}"
 
@@ -365,7 +399,7 @@ class HelixMindBioAI:
             if not path.exists():
                 path = self.safe_workspace_path(path_text)
             text = path.read_text(encoding="utf-8")[:3000]
-            return f"File preview for {path}:\n{text}"
+            return f"{path}:\n{text}"
         except Exception as exc:
             return f"Could not read file: {exc}"
 
@@ -378,7 +412,7 @@ class HelixMindBioAI:
                 return f"Folder not found: {path}"
             entries = sorted(path.iterdir(), key=lambda item: (not item.is_dir(), item.name.lower()))[:50]
             if not entries:
-                return f"No files found in {path}."
+                return f"No files in {path}."
             return "Files:\n" + "\n".join(("[folder] " if item.is_dir() else "[file] ") + item.name for item in entries)
         except Exception as exc:
             return f"Could not list files: {exc}"
@@ -386,15 +420,14 @@ class HelixMindBioAI:
     def make_checklist(self, text: str) -> str:
         items = [item.strip(" .") for item in re.split(r",|;| and ", text) if item.strip(" .")]
         if not items:
-            return "Give me checklist items after make checklist."
+            return "Give checklist items."
         return "Checklist:\n" + "\n".join(f"[ ] {item}" for item in items)
 
     def summarize_text(self, text: str) -> str:
         sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+", text) if part.strip()]
         if not sentences:
-            return "Give me text to summarize."
-        summary = " ".join(sentences[:3])
-        return f"Short summary:\n{summary}"
+            return "Give text to summarize."
+        return "Short summary:\n" + " ".join(sentences[:3])
 
     def draft_email(self, text: str) -> str:
         return "Email draft:\nSubject: Quick update\n\nHi,\n\n" + text.strip() + "\n\nBest,\n"
@@ -447,7 +480,7 @@ class HelixMindBioAI:
         if command.startswith("search pubmed for "):
             query = command.replace("search pubmed for ", "", 1).strip()
             webbrowser.open("https://pubmed.ncbi.nlm.nih.gov/?term=" + query.replace(" ", "+"))
-            return f"Searching PubMed for {query}."
+            return f"Searching PubMed: {query}."
         return None
 
     def open_folder(self, folder_text: str) -> str:
@@ -497,30 +530,27 @@ class HelixMindBioAI:
 
     def help_text(self) -> str:
         return (
-            "I am your local bioinformatics and desktop-control assistant. Try:\n"
+            "Fast commands:\n"
+            "helix fast mode\n"
+            "helix voice output off\n"
             "helix desktop status\n"
             "helix open any app chrome\n"
             "helix type text Hello, I am HelixMind.\n"
             "helix hotkey ctrl+s\n"
-            "helix press key enter\n"
-            "helix wait 2\n"
-            "helix click\n"
+            "helix wait 0.2\n"
             "helix add job open any app notepad\n"
+            "helix add job wait 0.5\n"
             "helix add job type text Sequence report ready.\n"
             "helix run jobs\n"
-            "helix gc content of ATGCGCGTTA\n"
-            "helix search pubmed for crispr diagnostics"
+            "helix gc content of ATGCGCGTTA"
         )
 
     def heartbeat(self) -> None:
-        if self.presence_enabled:
+        if self.presence_enabled and not self.fast_mode:
             print(f"{APP_NAME}: standing by for {self.active_project}. Type 'helix help' or add a job.")
 
     def run_text_mode(self) -> None:
-        self.speak(
-            "I am awake inside this computer as your local work assistant. "
-            "I can open apps, type into the active window, manage safe files, and do bioinformatics work. Type helix help for commands."
-        )
+        self.speak("Ready. Fast mode is on by default. Type helix help for commands.")
         last_heartbeat = time.time()
         while True:
             try:
@@ -529,7 +559,7 @@ class HelixMindBioAI:
                     last_heartbeat = time.time()
                 command = input("You: ")
             except KeyboardInterrupt:
-                self.speak("Session interrupted. I am closing safely.")
+                self.speak("Closing safely.")
                 break
             response, keep_running = self.answer(command)
             self.speak(response)
@@ -537,10 +567,8 @@ class HelixMindBioAI:
                 break
 
     def run_voice_mode(self) -> None:
-        self.speak(
-            "Voice presence mode is ready. Say Helix, then your command. "
-            "I can open apps, type into the active window, and do bioinformatics work while staying local."
-        )
+        self.voice_output_enabled = True
+        self.speak("Voice mode ready. Say Helix, then your command.")
         while True:
             command = self.listen()
             if not command or WAKE_WORD not in command:
