@@ -1,12 +1,12 @@
 # HelixMind Bio AI
 
-**HelixMind Bio AI** is a local-first Windows desktop assistant for bioinformatics work. She is designed to feel like a real-time lab assistant living in your computer: always ready in the console, accepting text or voice commands, keeping session notes, queueing jobs, and processing sequence tasks locally.
+**HelixMind Bio AI** is a local-first Windows assistant for bioinformatics and safe desktop work. She is designed to feel like a real-time worker living in your computer: always ready in the console, accepting text or voice commands, keeping session notes, queueing jobs, handling files in her workspace, and processing sequence tasks locally.
 
 Wake word: `helix`
 
 ## Personality
 
-HelixMind is not just a generic Jarvis clone. She is a focused bioinformatics coworker for sequence analysis, FASTA handling, primer checks, PubMed searches, and lightweight research support.
+HelixMind is not just a generic Jarvis clone. She is a focused local coworker for bioinformatics, research support, notes, folders, simple files, web searches, and lightweight productivity.
 
 She can:
 
@@ -15,11 +15,13 @@ She can:
 - remember session notes while running
 - queue multiple jobs and process them together
 - write a local session log to `helixmind_session_log.txt`
+- create and read files inside `HelixMind_Workspace`
+- open allowed apps and useful websites
 - work offline for core DNA/RNA/protein analysis
 
 ## What She Can Do
 
-HelixMind Bio AI can help with:
+Bioinformatics:
 
 - DNA/RNA cleanup and sequence reports
 - GC and AT content
@@ -38,6 +40,18 @@ HelixMind Bio AI can help with:
 - simple global alignment scoring
 - PubMed, NCBI, BLAST, UniProt, Ensembl, and PDB opening/searching
 
+General safe work:
+
+- create folders in her workspace
+- write small text files in her workspace
+- read text files
+- list files
+- make checklists
+- summarize pasted text
+- draft email text
+- open Notepad, Calculator, Paint, Explorer, Chrome, or VS Code if installed
+- search the web in your browser
+
 ## Quick Start
 
 1. Install Python 3.10+ and tick **Add python.exe to PATH**.
@@ -45,7 +59,7 @@ HelixMind Bio AI can help with:
 3. Double-click `HelixMindBioAI.bat`.
 4. Choose `text` or `voice` mode.
 
-If voice input is difficult on your laptop, choose text mode. All bioinformatics commands still work.
+If voice input is difficult on your laptop, choose text mode. All commands still work.
 
 ## Real-Time Worker Commands
 
@@ -55,11 +69,28 @@ helix project CRISPR off-target study
 helix note check GC before primer design
 helix show notes
 helix add job gc content of ATGCGCGTTA
-helix add job primer stats ATGCGTACGTAGCTAGCTA
+helix add job write file plan.txt with analyze FASTA and design primers
 helix show jobs
 helix run jobs
 helix presence on
 helix quiet mode
+```
+
+## General Work Commands
+
+```text
+helix create folder crispr_project
+helix write file notes.txt with today I checked primer GC
+helix read file notes.txt
+helix list files
+helix make checklist collect FASTA, run GC, design primers
+helix summarize text paste your paragraph here
+helix draft email I finished the sequence report and primer check
+helix open app notepad
+helix open app calculator
+helix open google
+helix open github
+helix search web for ncbi blast tutorial
 ```
 
 ## Bioinformatics Example Commands
@@ -88,9 +119,18 @@ helix open blast
 
 ## Local-First Privacy
 
-The built-in bioinformatics tools run on the computer. HelixMind Bio AI does not upload your sequences to a cloud service. Browser-opening commands only open public science websites in your browser.
+The built-in bioinformatics tools run on the computer. HelixMind Bio AI does not upload your sequences to a cloud service. Browser-opening commands only open websites in your browser.
 
-She does not watch private files automatically. You give her a folder, sequence, or FASTA path when you want work done.
+She does not watch private files automatically. You give her a folder, sequence, FASTA path, or command when you want work done.
+
+## Safety Rules
+
+- No API keys are hardcoded.
+- No destructive system commands are included.
+- The assistant does not run unknown shell commands from generated text.
+- File writing is limited to explicit FASTA export commands, the local session log, and `HelixMind_Workspace`.
+- Restart, shutdown, delete, and system-control commands are intentionally not implemented.
+- App launching is allowlisted.
 
 ## Windows Installer
 
@@ -119,17 +159,10 @@ requirements_helixmind_bio_ai.txt   Python requirements
 helixmind_bio_ai.spec               PyInstaller build config
 installer/HelixMindBioAI.iss        Inno Setup installer script
 docs/COMMANDS.md                    Command guide
+docs/PERSONALITY.md                 Personality and safety spec
 sample_data/example_gene.fasta      Example FASTA file
 ```
 
-## Safety Rules
-
-- No API keys are hardcoded.
-- No destructive system commands are included.
-- The assistant does not run unknown shell commands from generated text.
-- File writing is limited to explicit FASTA export commands and the local session log.
-- Restart, shutdown, delete, and system-control commands are intentionally not implemented.
-
 ## Status
 
-HelixMind Bio AI is now focused as a clean local bioinformatics desktop assistant with a real-time worker style.
+HelixMind Bio AI is now a clean local bioinformatics and safe-work desktop assistant.
