@@ -2,13 +2,40 @@
 
 Use `helix` before a command in voice mode. In text mode, either style works.
 
+## Real-Time Presence
+
+```text
+helix status
+helix project CRISPR off-target study
+helix presence on
+helix quiet mode
+helix what are you doing
+helix are you there
+```
+
+## Session Notes
+
+```text
+helix note extracted sample from patient dataset
+helix show notes
+```
+
+## Job Queue
+
+```text
+helix add job gc content of ATGCGCGTTA
+helix add job primer stats ATGCGTACGTAGCTAGCTA
+helix add job restriction scan GAATTCGGATCC
+helix show jobs
+helix run jobs
+helix clear jobs
+```
+
 ## Core
 
 ```text
 helix help
 helix time
-helix note extracted sample from patient dataset
-helix show notes
 helix exit
 ```
 
