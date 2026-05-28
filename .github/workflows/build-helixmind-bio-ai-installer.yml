@@ -1,4 +1,4 @@
-name: Build Windows Installer
+name: Build HelixMind Bio AI Installer
 
 on:
   workflow_dispatch:
@@ -7,10 +7,10 @@ on:
       - main
     paths:
       - "*.py"
-      - "requirements.txt"
-      - "professor.spec"
+      - "requirements_helixmind_bio_ai.txt"
+      - "helixmind_bio_ai.spec"
       - "installer/**"
-      - ".github/workflows/build-windows-installer.yml"
+      - ".github/workflows/build-helixmind-bio-ai-installer.yml"
 
 permissions:
   contents: write
@@ -27,38 +27,38 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements_helixmind_bio_ai.txt
           pip install pyinstaller
 
-      - name: Build Professor app
-        run: pyinstaller professor.spec --noconfirm --clean
+      - name: Build app
+        run: pyinstaller helixmind_bio_ai.spec --noconfirm --clean
 
       - name: Install Inno Setup
         run: choco install innosetup --yes --no-progress
 
-      - name: Build setup installer
+      - name: Build installer
         shell: pwsh
         run: |
           $compiler = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (!(Test-Path $compiler)) { throw "Inno Setup compiler not found at $compiler" }
-          & $compiler installer\Professor.iss
+          & $compiler installer\HelixMindBioAI.iss
 
-      - name: Upload installer artifact
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: ProfessorSetup
-          path: installer-output\ProfessorSetup.exe
+          name: HelixMindBioAISetup
+          path: installer-output\HelixMindBioAISetup.exe
 
-      - name: Publish latest installer release
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: professor-latest
-          name: Professor Voice Assistant Latest
-          body: Download ProfessorSetup.exe and run it to install Professor like a normal Windows app.
-          files: installer-output\ProfessorSetup.exe
+          tag_name: helixmind-bio-ai-latest
+          name: HelixMind Bio AI Latest
+          body: Download HelixMindBioAISetup.exe and run it to install the local bioinformatics assistant.
+          files: installer-output\HelixMindBioAISetup.exe
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

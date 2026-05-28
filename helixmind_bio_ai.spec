@@ -3,27 +3,21 @@
 block_cipher = None
 
 a = Analysis(
-    ["main.py"],
+    ["helixmind_bio_ai.py"],
     pathex=[],
     binaries=[],
     datas=[],
     hiddenimports=[
-        "permissions",
-        "professor_gui",
-        "tkinter",
+        "bioinformatics_tools",
         "pyttsx3.drivers",
         "pyttsx3.drivers.sapi5",
         "speech_recognition",
         "pyaudio",
-        "openai",
-        "google.generativeai",
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
     cipher=block_cipher,
     noarchive=False,
 )
@@ -34,17 +28,12 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="Professor",
+    name="HelixMindBioAI",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     console=True,
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
 )
 coll = COLLECT(
     exe,
@@ -53,6 +42,5 @@ coll = COLLECT(
     a.datas,
     strip=False,
     upx=True,
-    upx_exclude=[],
-    name="Professor",
+    name="HelixMindBioAI",
 )
