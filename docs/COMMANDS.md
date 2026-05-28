@@ -1,146 +1,157 @@
-# HelixMind Bio AI Command Guide
+# JANET Command Guide
 
-Use `helix` before a command in voice mode. In text mode, either style works.
+Use `janet` before a command in voice mode. In text mode, either style works. The old `helix` wake word still works as a fallback.
+
+## Speed And Theme
+
+```text
+janet fast mode
+janet normal mode
+janet light theme
+janet voice output off
+janet voice output on
+janet status
+```
 
 ## Desktop Control
 
 ```text
-helix desktop status
-helix open any app chrome
-helix open any app notepad
-helix open any app visual studio code
-helix type text Hello, I am HelixMind.
-helix paste text This goes into the active window.
-helix press key enter
-helix press key tab
-helix hotkey ctrl+s
-helix hotkey ctrl+a
-helix hotkey ctrl+c
-helix hotkey ctrl+v
-helix wait 2
-helix click
-helix click 500 300
+janet desktop status
+janet open any app chrome
+janet open any app notepad
+janet open any app visual studio code
+janet type text Hello, I am JANET.
+janet paste text This goes into the active window.
+janet press key enter
+janet press key tab
+janet hotkey ctrl+s
+janet hotkey ctrl+a
+janet hotkey ctrl+c
+janet hotkey ctrl+v
+janet wait 0.2
+janet click
+janet click 500 300
 ```
 
 ## Desktop Workflow Example
 
 ```text
-helix add job open any app notepad
-helix add job wait 2
-helix add job type text HelixMind is working inside this computer.
-helix add job hotkey ctrl+s
-helix run jobs
+janet add job open any app notepad
+janet add job wait 0.5
+janet add job type text JANET is working inside this computer.
+janet add job hotkey ctrl+s
+janet run jobs
 ```
 
 ## Real-Time Presence
 
 ```text
-helix status
-helix project CRISPR off-target study
-helix presence on
-helix quiet mode
-helix what are you doing
-helix are you there
+janet status
+janet project CRISPR off-target study
+janet presence on
+janet quiet mode
+janet what are you doing
+janet are you there
 ```
 
 ## Session Notes
 
 ```text
-helix note extracted sample from patient dataset
-helix show notes
+janet note extracted sample from patient dataset
+janet show notes
 ```
 
 ## Job Queue
 
 ```text
-helix add job gc content of ATGCGCGTTA
-helix add job primer stats ATGCGTACGTAGCTAGCTA
-helix add job write file plan.txt with analyze FASTA and design primers
-helix show jobs
-helix run jobs
-helix clear jobs
+janet add job gc content of ATGCGCGTTA
+janet add job primer stats ATGCGTACGTAGCTAGCTA
+janet add job write file plan.txt with analyze FASTA and design primers
+janet show jobs
+janet run jobs
+janet clear jobs
 ```
 
 ## General Safe Work
 
 ```text
-helix create folder crispr_project
-helix write file notes.txt with today I checked primer GC
-helix read file notes.txt
-helix list files
-helix list files crispr_project
-helix make checklist collect FASTA, run GC, design primers
-helix summarize text paste your paragraph here
-helix draft email I finished the sequence report and primer check
+janet create folder crispr_project
+janet write file notes.txt with today I checked primer GC
+janet read file notes.txt
+janet list files
+janet list files crispr_project
+janet make checklist collect FASTA, run GC, design primers
+janet summarize text paste your paragraph here
+janet draft email I finished the sequence report and primer check
 ```
 
 ## Apps And Websites
 
 ```text
-helix open app notepad
-helix open app calculator
-helix open app paint
-helix open app explorer
-helix open app chrome
-helix open app vscode
-helix open google
-helix open youtube
-helix open github
-helix open chatgpt
-helix search web for ncbi blast tutorial
+janet open app notepad
+janet open app calculator
+janet open app paint
+janet open app explorer
+janet open app chrome
+janet open app vscode
+janet open google
+janet open youtube
+janet open github
+janet open chatgpt
+janet search web for ncbi blast tutorial
 ```
 
 ## Core
 
 ```text
-helix help
-helix time
-helix exit
+janet help
+janet time
+janet exit
 ```
 
 ## Sequence Analysis
 
 ```text
-helix report ATGCGCGTTA
-helix gc content of ATGCGCGTTA
-helix reverse complement of ATGCCGTA
-helix transcribe ATGCCGTA
-helix translate dna ATGGCCATTGTA
-helix longest orf of AAATGAAATTTTAA
+janet report ATGCGCGTTA
+janet gc content of ATGCGCGTTA
+janet reverse complement of ATGCCGTA
+janet transcribe ATGCCGTA
+janet translate dna ATGGCCATTGTA
+janet longest orf of AAATGAAATTTTAA
 ```
 
 ## Bioinformatics Utilities
 
 ```text
-helix codon usage ATGGCCATTGTA
-helix restriction scan GAATTCGGATCC
-helix primer stats ATGCGTACGTAGCTAGCTA
-helix find motif ATG in CCCAATGTTTATG
-helix kmer count 3 ATGCGCGTTA
-helix protein weight of MTEYK
-helix compare ATGCC with ATGCA
-helix align ATGCC with ATGCA
+janet codon usage ATGGCCATTGTA
+janet restriction scan GAATTCGGATCC
+janet primer stats ATGCGTACGTAGCTAGCTA
+janet find motif ATG in CCCAATGTTTATG
+janet kmer count 3 ATGCGCGTTA
+janet protein weight of MTEYK
+janet compare ATGCC with ATGCA
+janet align ATGCC with ATGCA
 ```
 
 ## FASTA
 
 ```text
-helix summarize fasta C:\path\to\file.fasta
-helix save fasta ATGCGT named sample1 to C:\path\sample.fasta
+janet summarize fasta C:\path\to\file.fasta
+janet save fasta ATGCGT named sample1 to C:\path\sample.fasta
 ```
 
 ## Science Websites
 
 ```text
-helix open ncbi
-helix open blast
-helix open uniprot
-helix open ensembl
-helix open pdb
-helix open pubmed
-helix search pubmed for crispr diagnostics
+janet open ncbi
+janet open blast
+janet open uniprot
+janet open ensembl
+janet open pdb
+janet open pubmed
+janet search pubmed for crispr diagnostics
 ```
 
 ## Safety Limits
 
-HelixMind can open apps and type into the active window, but she will not type passwords, OTPs, API keys, secrets, or run destructive system commands.
+JANET can open apps and type into the active window, but she will not type passwords, OTPs, API keys, secrets, credit card details, or run destructive system commands.
